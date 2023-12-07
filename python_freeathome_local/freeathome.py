@@ -14,7 +14,7 @@ import async_timeout
 from yarl import URL
 from base64 import b64encode
 
-from .pairingids import PairingIds
+from .pairingids import PairingIDs
 from .models.sysap import SysAp
 
 from .exceptions import(
@@ -123,8 +123,8 @@ class FreeAtHome:
             if message.type == aiohttp.WSMsgType.TEXT:
                 messageData = message.json()
 
-                if str(self._sysAp.id) == list(messageData.keys())[0]:
-                    sysap = self._sysAp.updateFromDict(data=messageData[str(self._sysAp.id)])
+                if str(self._sysAp.getId()) == list(messageData.keys())[0]:
+                    sysap = self._sysAp.updateFromDict(data=messageData[str(self._sysAp.getId())])
                     callback(sysap)
             
             if message.type in (
@@ -223,7 +223,7 @@ class FreeAtHome:
 
         return cast(dict[str, Any], responseData)
 
-    async def getConfiguration(self, sysApOnly: bool = True) -> SysAp:
+    async def loadSysAp(self, sysApOnly: bool = True) -> SysAp:
         """Get all configuration from the SysAp in a single call.
 
         This method receives all SysAp information available with a single

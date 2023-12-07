@@ -4,13 +4,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any
+#from .sysap import SysAp
+from .floor import Floor
 from .tpdevice import TPDevice
 
 @dataclass
 class DeviceFactory:
 
     @classmethod
-    def create(cls, serialNumber: str, config: dict[str, Any]) -> AbstractDevice:
+    def create(cls, sysAp: SysAp, serialNumber: str, config: dict[str, Any]) -> AbstractDevice:
         """Create a specific device object based on provided config"""
 
         floor = ""
@@ -20,12 +22,25 @@ class DeviceFactory:
         unresponsiveCounter = 0
         defect = False
         channels = {}
+        parameters = {}
 
         if "floor" in config:
             floor = config["floor"]
+
+            if floor != "":
+                floor = sysAp.getFloorplan().getFloorById(int(floor, 16))
+        
+        if floor == "":
+            floor = None
         
         if "room" in config:
             room = config["room"]
+
+            if room != "" and isinstance(floor, Floor):
+                room = floor.getRoomById(int(room, 16))
+        
+        if room == "":
+            room = None
         
         if "displayName" in config:
             displayName = config["displayName"]
@@ -42,6 +57,9 @@ class DeviceFactory:
         if "channels" in config:
             channels = config["channels"]
         
+        if "parameters" in config:
+            parameters = config["parameters"]
+        
         if "interface" in config:
             interface = config["interface"]
 
@@ -55,6 +73,7 @@ class DeviceFactory:
                 """TP devices will be processed"""
                 print(f"Let's process device '{serialNumber}' as it is a TP device")
                 device = TPDevice(
+                    sysAp= sysAp,
                     interface= interface,
                     serialNumber= serialNumber,
                     floor= floor,
@@ -63,10 +82,11 @@ class DeviceFactory:
                     unresponsive= unresponsive,
                     unresponsiveCounter= unresponsiveCounter,
                     defect= defect,
-                    channels= channels
+                    channels= channels,
+                    parameters= parameters
                 )
 
-                if len(device.channels) == 0:
+                if len(device.getChannels()) == 0:
                     device = None
 
             else:

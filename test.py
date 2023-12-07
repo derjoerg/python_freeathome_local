@@ -14,7 +14,7 @@ async def main() -> None:
         password=password,
     ) as freeathome:
         await freeathome.connect()
-        sysAp = await freeathome.getConfiguration(False)
+        sysAp = await freeathome.loadSysAp(False)
 
         if freeathome.connected:
             print("connected")
@@ -23,13 +23,12 @@ async def main() -> None:
         def somethingUpdated(sysAp: SysAp) -> None:
             """Call when SysAp reports a change."""
             print("Received an update from SysAp")
-            print(sysAp.connectionState)
         
         # Start listening
         task = asyncio.create_task(freeathome.listen(callback=somethingUpdated))
 
-        # Now we stream for 30 seconds
-        await asyncio.sleep(30)
+        # Now we stream for 10 seconds
+        await asyncio.sleep(10)
         task.cancel()
 
 if __name__ == "__main__":

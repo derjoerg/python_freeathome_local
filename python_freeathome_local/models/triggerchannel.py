@@ -10,11 +10,22 @@ from .abstractchannel import AbstractChannel
 class TriggerChannel(AbstractChannel):
     """Model for a Trigger-Channel."""
 
-    def __init__(self, identifier: str, floor: str, room: str, displayName: str, functionId: FunctionIds):
+    def __init__(self, device: AbstractDevice, identifier: str, floor: Floor, room: Room, displayName: str, functionID: FunctionIDs, parameters: dict[str, Any], inputs: dict[str, Any], outputs: dict[str, Any]):
         super().__init__(
+            device,
             identifier,
             floor,
             room,
             displayName,
-            functionId
+            functionID,
+            parameters,
+            inputs,
+            outputs
+        )
+
+    def __str__(self) -> str:
+        parent = super().__str__()
+        return (
+            f"Trigger-Channel:\n"
+            f"{parent}"
         )

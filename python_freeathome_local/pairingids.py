@@ -2,7 +2,7 @@
 
 from enum import Enum
 
-class PairingIds(Enum):
+class PairingIDs(Enum):
     AL_SWITCH_ON_OFF = 0x0001 # Binary Switch value
     AL_TIMED_START_STOP = 0x0002 # For staircase lighting or movement detection
     AL_FORCED = 0x0003 # Forces value dependent high priority on or off state

@@ -10,10 +10,11 @@ from .abstractdevice import AbstractDevice
 class TPDevice(AbstractDevice):
     """Model for a TP-Device."""
 
-    interface: str = "TP"
+    __interface: str = "TP"
 
-    def __init__(self, interface: str, serialNumber: str, floor: str, room: str, displayName: str, unresponsive: bool, unresponsiveCounter: int, defect: bool, channels: dict[str, Any]):
+    def __init__(self, sysAp: SysAp, interface: str, serialNumber: str, floor: Floor | None, room: Room | None, displayName: str, unresponsive: bool, unresponsiveCounter: int, defect: bool, channels: dict[str, Any], parameters: dict[str, Any]):
         super().__init__(
+            sysAp,
             serialNumber,
             floor,
             room,
@@ -21,6 +22,15 @@ class TPDevice(AbstractDevice):
             unresponsive,
             unresponsiveCounter,
             defect,
-            channels
+            channels,
+            parameters
         )
-        self.interface = interface
+        self.__interface = interface
+
+    def __str__(self) -> str:
+        parent = super().__str__()
+        return (
+            f"TP-Device:\n"
+            f"Interface: {self.__interface}\n"
+            f"{parent}"
+        )

@@ -2,7 +2,7 @@
 
 from enum import Enum
 
-class FunctionIds(Enum):
+class FunctionIDs(Enum):
     FID_SWITCH_SENSOR = 0x0000
     FID_DIMMING_SENSOR = 0x0001
     FID_SHUTTER_SENSOR = 0x0002
