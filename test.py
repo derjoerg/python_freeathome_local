@@ -18,7 +18,10 @@ async def main() -> None:
 
         if freeathome.connected:
             print("connected")
-            print(sysAp)
+            #print(sysAp)
+            #result = await sysAp.getDeviceById("ABB28EBC3651").getChannelById("ch0012").press()
+            #result = await sysAp.getDeviceById("ABB242AD3651").getChannelById("ch0003").turnOn()
+            #result = await sysAp.getDeviceById("ABB242AD3651").getChannelById("ch0003").turnOff()
         
         def somethingUpdated(sysAp: SysAp) -> None:
             """Call when SysAp reports a change."""

@@ -83,5 +83,28 @@ class AbstractDevice(ABC):
     def getSysAp(self) -> SysAp:
         return self.__sysAp
 
+    def getSerialNumber(self) -> str:
+        return self.__serialNumber
+
     def getChannels(self) -> dict:
         return self.__channels
+
+    def getChannelById(self, id: str) -> AbstractChannel:
+        return self.__channels[id]
+
+    def updateFromDict(self, key, value):
+        """Return Channel object from Free@Home API response.
+
+        Args:
+        ----
+            data: Update everything based on the websocket data
+        
+        Returns:
+        -------
+            The updated Channel object.
+        """
+        splitted = key.split('/')
+
+        if splitted[0] in self.__channels:
+            datapoint = self.__channels[splitted[0]].updateFromDict(splitted[1], value)
+            return datapoint

@@ -5,11 +5,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 from .abstractchannel import AbstractChannel
-from ..pairingids import PairingIDs
 
 @dataclass
-class TriggerChannel(AbstractChannel):
-    """Model for a Trigger-Channel."""
+class TemperatureSensorChannel(AbstractChannel):
+    """Model for a Temperature-Sensor-Channel."""
 
     def __init__(self, device: AbstractDevice, identifier: str, floor: Floor, room: Room, displayName: str, functionID: FunctionIDs, parameters: dict[str, Any], inputs: dict[str, Any], outputs: dict[str, Any]):
         super().__init__(
@@ -30,11 +29,3 @@ class TriggerChannel(AbstractChannel):
             f"Trigger-Channel:\n"
             f"{parent}"
         )
-
-    async def press(self):
-        """Trigger the channel"""
-
-        for key, datapoint in self.getInputs().items():
-
-            if datapoint.getPairingID() == PairingIDs.AL_TIMED_START_STOP:
-                return await datapoint.setValue(1)

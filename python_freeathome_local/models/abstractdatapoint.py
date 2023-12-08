@@ -29,3 +29,19 @@ class AbstractDatapoint(ABC):
         )
 
         return string
+
+    def getChannel(self):
+        return self.__channel
+
+    def getIdentifier(self) -> str:
+        return self.__identifier
+
+    def getPairingID(self):
+        return self.__pairingID
+
+    def setValue(self, value):
+        self.__value = value
+        return self
+
+    def getValue(self) -> str:
+        return self.__value

@@ -6,6 +6,7 @@ from abc import ABC, abstractmethod
 import textwrap
 
 from ..functionids import FunctionIDs
+from ..pairingids import PairingIDs
 from .parameterfactory import ParameterFactory
 from .datapointfactory import DatapointFactory
 from .inputdatapoint import InputDatapoint
@@ -45,18 +46,31 @@ class AbstractChannel(ABC):
             datapoint = DatapointFactory.create(self, key, value)
 
             if datapoint is not None:
+                self.__inputs[key] = datapoint
 
-                if isinstance(datapoint, InputDatapoint):
-                    self.__inputs[key] = datapoint
-                else:
-                    self.__outputs[key] = datapoint
+        for key, value in outputs.items():
+            datapoint = DatapointFactory.create(self, key, value)
+
+            if datapoint is not None:
+                self.__outputs[key] = datapoint
 
     def __str__(self) -> str:
+
+        if self.__floor is None:
+            floor = '<Not set>'
+        else:
+            floor = self.__floor.getName()
+        
+        if self.__room is None:
+            room = '<Not set>'
+        else:
+            room = self.__room.getName()
+
         string = (
             f"Identifier: {self.__identifier}\n"
             f"Name      : {self.__displayName}\n"
-            f"Floor     : {self.__floor.getName()}\n"
-            f"Room      : {self.__room.getName()}\n"
+            f"Floor     : {floor}\n"
+            f"Room      : {room}\n"
             f"Function  : {self.__functionID}"
         )
 
@@ -103,3 +117,31 @@ class AbstractChannel(ABC):
             )
         
         return string
+
+    def getDevice(self):
+        return self.__device
+
+    def getIdentifier(self) -> str:
+        return self.__identifier
+
+    def getDisplayName(self) -> str:
+        return self.__displayName
+
+    def getInputs(self):
+        return self.__inputs
+
+    def updateFromDict(self, key, value):
+        """Return Datapoint object from Free@Home API response.
+
+        Args:
+        ----
+            data: Update everything based on the websocket data
+        
+        Returns:
+        -------
+            The updated Datapoint object.
+        """
+
+        if key in self.__outputs:
+            datapoint = self.__outputs[key].setValue(value)
+            return datapoint

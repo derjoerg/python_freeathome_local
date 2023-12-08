@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, cast
 import aiohttp
 from aiohttp import BasicAuth, ClientError, ClientResponseError, ClientSession, ClientWebSocketResponse
-from aiohttp.hdrs import METH_POST, METH_GET
+from aiohttp.hdrs import METH_PUT, METH_GET
 import async_timeout
 from yarl import URL
 from base64 import b64encode
@@ -142,6 +142,22 @@ class FreeAtHome:
         
         await self._client.close()
 
+    async def setDatapoint(self, datapoint: InputDatapoint):
+        uri = (
+            "datapoint/" +
+            str(datapoint.getChannel().getDevice().getSysAp().getId()) +
+            "/" +
+            datapoint.getChannel().getDevice().getSerialNumber() +
+            "." +
+            datapoint.getChannel().getIdentifier() +
+            "." +
+            datapoint.getIdentifier()
+        )
+        print(f"{uri}")
+        data = str(datapoint.getValue())
+        response = await self.request(uri=uri, method=METH_PUT, data=data)
+        print(f"{response}")
+
     async def request(
         self,
         uri: str,
@@ -242,7 +258,7 @@ class FreeAtHome:
 
         if 1 == len(response):
             uuid = list(response.keys())[0]
-            self._sysAp = SysAp.fromApi(uuid, response[uuid], sysApOnly)
+            self._sysAp = SysAp.fromApi(self, uuid, response[uuid], sysApOnly)
         
         if self._sysAp is None:
             msg = f"The needed configuration was not received from {self.host}"

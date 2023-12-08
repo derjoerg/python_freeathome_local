@@ -8,8 +8,8 @@ from .abstractchannel import AbstractChannel
 from ..pairingids import PairingIDs
 
 @dataclass
-class TriggerChannel(AbstractChannel):
-    """Model for a Trigger-Channel."""
+class SwitchActuatorChannel(AbstractChannel):
+    """Model for a SwitchActuator-Channel."""
 
     def __init__(self, device: AbstractDevice, identifier: str, floor: Floor, room: Room, displayName: str, functionID: FunctionIDs, parameters: dict[str, Any], inputs: dict[str, Any], outputs: dict[str, Any]):
         super().__init__(
@@ -31,10 +31,18 @@ class TriggerChannel(AbstractChannel):
             f"{parent}"
         )
 
-    async def press(self):
-        """Trigger the channel"""
+    async def turnOn(self):
+        """Turns the channel on"""
 
         for key, datapoint in self.getInputs().items():
 
-            if datapoint.getPairingID() == PairingIDs.AL_TIMED_START_STOP:
+            if datapoint.getPairingID() == PairingIDs.AL_SWITCH_ON_OFF:
                 return await datapoint.setValue(1)
+
+    async def turnOff(self):
+        """Turns the channel off"""
+
+        for key, datapoint in self.getInputs().items():
+
+            if datapoint.getPairingID() == PairingIDs.AL_SWITCH_ON_OFF:
+                return await datapoint.setValue(0)

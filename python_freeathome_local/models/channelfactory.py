@@ -5,6 +5,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 from .triggerchannel import TriggerChannel
+from .temperaturesensorchannel import TemperatureSensorChannel
+from .brightnesssensorchannel import BrightnessSensorChannel
+from .switchactuatorchannel import SwitchActuatorChannel
 from ..functionids import FunctionIDs
 from .floor import Floor
 
@@ -59,6 +62,12 @@ class ChannelFactory:
 
             if functionID == FunctionIDs.FID_TRIGGER.value:
                 channel = TriggerChannel(device=device, identifier=identifier, floor=floor, room=room, displayName=displayName, functionID=FunctionIDs.FID_TRIGGER, parameters=parameters, inputs=inputs, outputs=outputs)
+            elif functionID == FunctionIDs.FID_TEMPERATURE_SENSOR.value:
+                channel = TemperatureSensorChannel(device=device, identifier=identifier, floor=floor, room=room, displayName=displayName, functionID=FunctionIDs.FID_TEMPERATURE_SENSOR, parameters=parameters, inputs=inputs, outputs=outputs)
+            elif functionID == FunctionIDs.FID_BRIGHTNESS_SENSOR.value:
+                channel = BrightnessSensorChannel(device=device, identifier=identifier, floor=floor, room=room, displayName=displayName, functionID=FunctionIDs.FID_TEMPERATURE_SENSOR, parameters=parameters, inputs=inputs, outputs=outputs)
+            elif functionID == FunctionIDs.FID_SWITCH_ACTUATOR.value:
+                channel = SwitchActuatorChannel(device=device, identifier=identifier, floor=floor, room=room, displayName=displayName, functionID=FunctionIDs.FID_SWITCH_ACTUATOR, parameters=parameters, inputs=inputs, outputs=outputs)
 
         try: channel
         except NameError: channel = None

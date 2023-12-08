@@ -88,6 +88,7 @@ class DeviceFactory:
 
                 if len(device.getChannels()) == 0:
                     device = None
+                    print(f"\tNo channels, so not added.")
 
             else:
                 """All other interface devices will be ignored"""

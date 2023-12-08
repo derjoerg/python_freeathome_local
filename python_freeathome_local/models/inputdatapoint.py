@@ -24,3 +24,7 @@ class InputDatapoint(AbstractDatapoint):
             f"Input-Datapoint:\n"
             f"{parent}"
         )
+
+    async def setValue(self, value: int):
+        super().setValue(value)
+        return await self.getChannel().getDevice().getSysAp().getApi().setDatapoint(self)
