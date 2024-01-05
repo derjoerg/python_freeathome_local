@@ -31,10 +31,12 @@ class TriggerChannel(AbstractChannel):
             f"{parent}"
         )
 
+    async def setTimedStartStop(self):
+        """Trigger the channel"""
+        datapoint = self.getInputByPairingID(PairingIDs.AL_TIMED_START_STOP)
+        return await datapoint.setValue(1)
+
     async def press(self):
         """Trigger the channel"""
-
-        for key, datapoint in self.getInputs().items():
-
-            if datapoint.getPairingID() == PairingIDs.AL_TIMED_START_STOP:
-                return await datapoint.setValue(1)
+        return await self.setTimedStartStop()
+ 

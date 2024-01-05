@@ -30,11 +30,3 @@ class SwitchSensorChannel(AbstractChannel):
             f"Trigger-Channel:\n"
             f"{parent}"
         )
-
-    #async def press(self):
-    #    """Trigger the channel"""
-    #
-    #    for key, datapoint in self.getInputs().items():
-    #
-    #        if datapoint.getPairingID() == PairingIDs.AL_TIMED_START_STOP:
-    #            return await datapoint.setValue(1)
