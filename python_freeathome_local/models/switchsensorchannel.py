@@ -8,8 +8,8 @@ from .abstractchannel import AbstractChannel
 from ..pairingids import PairingIDs
 
 @dataclass
-class BrightnessSensorChannel(AbstractChannel):
-    """Model for a Brightness-Sensor-Channel."""
+class SwitchSensorChannel(AbstractChannel):
+    """Model for a SwitchSensor-Channel."""
 
     def __init__(self, device: AbstractDevice, identifier: str, floor: Floor, room: Room, displayName: str, functionID: FunctionIDs, parameters: dict[str, Any], inputs: dict[str, Any], outputs: dict[str, Any]):
         super().__init__(
@@ -31,13 +31,10 @@ class BrightnessSensorChannel(AbstractChannel):
             f"{parent}"
         )
 
-    def getBrightnessLevel(self):
-        datapoint = self.getOutputByPairingID(PairingIDs.AL_BRIGHTNESS_LEVEL)
-        return float(datapoint.getValue())
-
-    def getState(self):
-        return self.getBrightnessLevel()
-
-    def getBrightnessAlarm(self):
-        datapoint = self.getOutputByPairingID(PairingIDs.AL_BRIGHTNESS_ALARM)
-        return datapoint.getValue() == '1'
+    #async def press(self):
+    #    """Trigger the channel"""
+    #
+    #    for key, datapoint in self.getInputs().items():
+    #
+    #        if datapoint.getPairingID() == PairingIDs.AL_TIMED_START_STOP:
+    #            return await datapoint.setValue(1)

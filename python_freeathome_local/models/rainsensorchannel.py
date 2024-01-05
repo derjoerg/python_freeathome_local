@@ -8,8 +8,8 @@ from .abstractchannel import AbstractChannel
 from ..pairingids import PairingIDs
 
 @dataclass
-class BrightnessSensorChannel(AbstractChannel):
-    """Model for a Brightness-Sensor-Channel."""
+class RainSensorChannel(AbstractChannel):
+    """Model for a Rain-Sensor-Channel."""
 
     def __init__(self, device: AbstractDevice, identifier: str, floor: Floor, room: Room, displayName: str, functionID: FunctionIDs, parameters: dict[str, Any], inputs: dict[str, Any], outputs: dict[str, Any]):
         super().__init__(
@@ -31,13 +31,17 @@ class BrightnessSensorChannel(AbstractChannel):
             f"{parent}"
         )
 
-    def getBrightnessLevel(self):
-        datapoint = self.getOutputByPairingID(PairingIDs.AL_BRIGHTNESS_LEVEL)
-        return float(datapoint.getValue())
-
-    def getState(self):
-        return self.getBrightnessLevel()
-
-    def getBrightnessAlarm(self):
-        datapoint = self.getOutputByPairingID(PairingIDs.AL_BRIGHTNESS_ALARM)
+    def getRainAlarm(self):
+        datapoint = self.getOutputByPairingID(PairingIDs.AL_RAIN_ALARM)
         return datapoint.getValue() == '1'
+    
+    def getState(self):
+        return self.getRainAlarm()
+
+    def getRainSensorActivationPercentage(self):
+        datapoint = self.getOutputByPairingID(PairingIDs.AL_RAIN_SENSOR_ACTIVATION_PERCENTAGE)
+        return float(datapoint.getValue())
+    
+    def getRainSensorFrequency(self):
+        datapoint = self.getOutputByPairingID(PairingIDs.AL_RAIN_SENSOR_FREQUENCY)
+        return float(datapoint.getValue())

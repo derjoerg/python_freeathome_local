@@ -8,8 +8,8 @@ from .abstractchannel import AbstractChannel
 from ..pairingids import PairingIDs
 
 @dataclass
-class BrightnessSensorChannel(AbstractChannel):
-    """Model for a Brightness-Sensor-Channel."""
+class WindSensorChannel(AbstractChannel):
+    """Model for a Wind-Sensor-Channel."""
 
     def __init__(self, device: AbstractDevice, identifier: str, floor: Floor, room: Room, displayName: str, functionID: FunctionIDs, parameters: dict[str, Any], inputs: dict[str, Any], outputs: dict[str, Any]):
         super().__init__(
@@ -31,13 +31,17 @@ class BrightnessSensorChannel(AbstractChannel):
             f"{parent}"
         )
 
-    def getBrightnessLevel(self):
-        datapoint = self.getOutputByPairingID(PairingIDs.AL_BRIGHTNESS_LEVEL)
+    def getWindSpeed(self):
+        datapoint = self.getOutputByPairingID(PairingIDs.AL_WIND_SPEED)
         return float(datapoint.getValue())
 
     def getState(self):
-        return self.getBrightnessLevel()
+        return self.getWindSpeed()
 
-    def getBrightnessAlarm(self):
-        datapoint = self.getOutputByPairingID(PairingIDs.AL_BRIGHTNESS_ALARM)
+    def getWindAlarm(self):
+        datapoint = self.getOutputByPairingID(PairingIDs.AL_WIND_ALARM)
         return datapoint.getValue() == '1'
+
+    def getWindForce(self):
+        datapoint = self.getOutputByPairingID(PairingIDs.AL_WIND_FORCE)
+        return int(datapoint.getValue())

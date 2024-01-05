@@ -71,7 +71,7 @@ class DeviceFactory:
                 print(f"We ignore device '{serialNumber}' as it is a Hue")
             elif "TP" == config["interface"]:
                 """TP devices will be processed"""
-                print(f"Let's process device '{serialNumber}' as it is a TP device")
+                print(f"Let's process device '{serialNumber}' with the name '{displayName}' as it is a TP device")
                 device = TPDevice(
                     sysAp= sysAp,
                     interface= interface,
@@ -92,10 +92,10 @@ class DeviceFactory:
 
             else:
                 """All other interface devices will be ignored"""
-                print(f"We ignore device '{serialNumber}' with the interface '{interface}'")
+                print(f"We ignore device '{serialNumber}' with the interface '{interface}' and the name '{displayName}'")
         else:
             """We ignore devices without an interface"""
-            print(f"The device '{serialNumber}' will be ignored")
+            print(f"The device '{serialNumber}' with the name '{displayName}' will be ignored")
         
         try: device
         except NameError: device = None

@@ -70,8 +70,8 @@ class SysAp:
 
         return sysAp
 
-    def updateFromDict(self, data: dict[str, Any]) -> SysAp:
-        """Return SysAp object from Free@Home API response.
+    def updateFromDict(self, data: dict[str, Any]) -> list:
+        """Return list of updated datapoints from Free@Home API response.
 
         Args:
         ----
@@ -79,24 +79,27 @@ class SysAp:
         
         Returns:
         -------
-            The updated SysAp object.
+            The updated datapoint objects as list.
         """
+        datapoints = []
+
         if "datapoints" in data:
 
             for key, value in data["datapoints"].items():
                 splitted = key.split('/', 1)
-                print(key, " has the value ", value)
+                #print(key, " has the value ", value)
 
                 if splitted[0] in self.__devices:
                     datapoint = self.__devices[splitted[0]].updateFromDict(splitted[1], value)
 
                     if datapoint is not None:
-                        print(datapoint.getChannel().getDisplayName(), " - ", datapoint.getPairingID().name, " : ", datapoint.getValue())
+                        datapoints.append(datapoint)
+                        #print(datapoint.getChannel().getDisplayName(), " - ", datapoint.getPairingID().name, " : ", datapoint.getValue())
 
-                else:
-                    print(f"Not defined")
+                #else:
+                #    print(f"Not defined : {key} has the value {value}")
 
-        return self
+        return datapoints
 
     def __str__(self) -> str:
         string = (

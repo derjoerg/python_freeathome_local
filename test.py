@@ -18,14 +18,45 @@ async def main() -> None:
 
         if freeathome.connected:
             print("connected")
+            # SysAp
             #print(sysAp)
+            # Weatherstation
+            #print(sysAp.getDeviceById("7EB1000021C5"))
+            # BrightnessSensor
+            #print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0000").getState())
+            #print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0000").getBrightnessAlarm())
+            # TemperatureSensor
+            #print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0002").getState())
+            #print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0002").getFrostAlarm())
+            # WindSensor
+            #print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0003").getState())
+            #print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0003").getWindAlarm())
+            #print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0003").getWindForce())
+            # RainSensor
+            #print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0001").getState())
+            #print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0001").getRainSensorActivationPercentage())
+            #print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0001").getRainSensorFrequency())
+
+            # Trigger
             #result = await sysAp.getDeviceById("ABB28EBC3651").getChannelById("ch0012").press()
+            # SwitchActuator
             #result = await sysAp.getDeviceById("ABB242AD3651").getChannelById("ch0003").turnOn()
             #result = await sysAp.getDeviceById("ABB242AD3651").getChannelById("ch0003").turnOff()
         
-        def somethingUpdated(sysAp: SysAp) -> None:
+        def somethingUpdated(datapoints) -> None:
             """Call when SysAp reports a change."""
-            print("Received an update from SysAp")
+            print("\tReceived an update from SysAp")
+
+            for datapoint in datapoints:
+                print(
+                    datapoint.getChannel().getDevice().getSerialNumber(),
+                    '(', datapoint.getChannel().getDevice().getDisplayName(), ')',
+                    ' - ',
+                    datapoint.getChannel().getIdentifier(),
+                    '(', datapoint.getChannel().getDisplayName(), ')',
+                    ' - ',
+                    datapoint.getPairingID().name, ' : ', datapoint.getValue()
+                )
         
         # Start listening
         task = asyncio.create_task(freeathome.listen(callback=somethingUpdated))

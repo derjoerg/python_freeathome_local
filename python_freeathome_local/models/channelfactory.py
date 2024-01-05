@@ -7,7 +7,10 @@ from typing import Any
 from .triggerchannel import TriggerChannel
 from .temperaturesensorchannel import TemperatureSensorChannel
 from .brightnesssensorchannel import BrightnessSensorChannel
+from .windsensorchannel import WindSensorChannel
 from .switchactuatorchannel import SwitchActuatorChannel
+from .rainsensorchannel import RainSensorChannel
+from .switchsensorchannel import SwitchSensorChannel
 from ..functionids import FunctionIDs
 from .floor import Floor
 
@@ -26,6 +29,7 @@ class ChannelFactory:
         parameters = {}
         inputs = {}
         outputs = {}
+        channel = None
 
         if "floor" in config:
             floor = config["floor"]
@@ -59,17 +63,34 @@ class ChannelFactory:
 
         if "functionID" in config and config["functionID"] != "":
             functionID = int(config["functionID"], 16)
+            print(f"\t{functionID} - {FunctionIDs(functionID).name}")
 
-            if functionID == FunctionIDs.FID_TRIGGER.value:
-                channel = TriggerChannel(device=device, identifier=identifier, floor=floor, room=room, displayName=displayName, functionID=FunctionIDs.FID_TRIGGER, parameters=parameters, inputs=inputs, outputs=outputs)
-            elif functionID == FunctionIDs.FID_TEMPERATURE_SENSOR.value:
-                channel = TemperatureSensorChannel(device=device, identifier=identifier, floor=floor, room=room, displayName=displayName, functionID=FunctionIDs.FID_TEMPERATURE_SENSOR, parameters=parameters, inputs=inputs, outputs=outputs)
-            elif functionID == FunctionIDs.FID_BRIGHTNESS_SENSOR.value:
-                channel = BrightnessSensorChannel(device=device, identifier=identifier, floor=floor, room=room, displayName=displayName, functionID=FunctionIDs.FID_TEMPERATURE_SENSOR, parameters=parameters, inputs=inputs, outputs=outputs)
-            elif functionID == FunctionIDs.FID_SWITCH_ACTUATOR.value:
-                channel = SwitchActuatorChannel(device=device, identifier=identifier, floor=floor, room=room, displayName=displayName, functionID=FunctionIDs.FID_SWITCH_ACTUATOR, parameters=parameters, inputs=inputs, outputs=outputs)
+            if functionID in FunctionIDs:
+                className = FunctionIDs(functionID).name.removeprefix('FID_').title().replace('_', '') + 'Channel'
 
-        try: channel
-        except NameError: channel = None
+                try:
+                    channel = globals()[className](device=device, identifier=identifier, floor=floor, room=room, displayName=displayName, functionID=FunctionIDs(functionID), parameters=parameters, inputs=inputs, outputs=outputs)
+                    print(f"\t\tok")
+                except KeyError:
+                    #channel = None
+                    print(f"\t\t{className} not defined")
+            #else:
+            #    channel = None
+
+            #if functionID == FunctionIDs.FID_TRIGGER.value:
+            #    channel = TriggerChannel(device=device, identifier=identifier, floor=floor, room=room, displayName=displayName, functionID=FunctionIDs.FID_TRIGGER, parameters=parameters, inputs=inputs, outputs=outputs)
+            #    print(f"\t\tok")
+            #elif functionID == FunctionIDs.FID_TEMPERATURE_SENSOR.value:
+            #    channel = TemperatureSensorChannel(device=device, identifier=identifier, floor=floor, room=room, displayName=displayName, functionID=FunctionIDs.FID_TEMPERATURE_SENSOR, parameters=parameters, inputs=inputs, outputs=outputs)
+            #    print(f"\t\tok")
+            #elif functionID == FunctionIDs.FID_BRIGHTNESS_SENSOR.value:
+            #    channel = BrightnessSensorChannel(device=device, identifier=identifier, floor=floor, room=room, displayName=displayName, functionID=FunctionIDs.FID_TEMPERATURE_SENSOR, parameters=parameters, inputs=inputs, outputs=outputs)
+            #    print(f"\t\tok")
+            #elif functionID == FunctionIDs.FID_SWITCH_ACTUATOR.value:
+            #    channel = SwitchActuatorChannel(device=device, identifier=identifier, floor=floor, room=room, displayName=displayName, functionID=FunctionIDs.FID_SWITCH_ACTUATOR, parameters=parameters, inputs=inputs, outputs=outputs)
+            #    print(f"\t\tok")
+
+        #try: channel
+        #except NameError: channel = None
 
         return channel

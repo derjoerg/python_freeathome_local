@@ -15,72 +15,72 @@ from .outputdatapoint import OutputDatapoint
 class AbstractChannel(ABC):
     """Model for an abstract Channel."""
 
-    __device: AbstractDevice | None = None
-    __identifier: str = ""
-    __floor: Floor | None = None
-    __room: Room | None = None
-    __displayName: str = ""
-    __functionID: FunctionIDs
-    __inputs: {}
-    __outputs: {}
-    __parameters: {}
+    _device: AbstractDevice | None = None
+    _identifier: str = ""
+    _floor: Floor | None = None
+    _room: Room | None = None
+    _displayName: str = ""
+    _functionID: FunctionIDs
+    _inputs: {}
+    _outputs: {}
+    _parameters: {}
 
     def __init__(self, device: AbstractDevice, identifier: str, floor: Floor | None, room: Room | None, displayName: str, functionID: FunctionIDs, parameters: dict[str, Any], inputs: dict[str, Any], outputs: dict[str, Any]):
-        self.__device = device
-        self.__identifier = identifier
-        self.__floor = floor
-        self.__room = room
-        self.__displayName = displayName
-        self.__functionID = functionID
-        self.__inputs = {}
-        self.__outputs = {}
-        self.__parameters = {}
+        self._device = device
+        self._identifier = identifier
+        self._floor = floor
+        self._room = room
+        self._displayName = displayName
+        self._functionID = functionID
+        self._inputs = {}
+        self._outputs = {}
+        self._parameters = {}
 
         for key, value in parameters.items():
             parameter = ParameterFactory.create(key, value)
 
             if parameter is not None:
-                self.__parameters[key] = parameter
+                self._parameters[key] = parameter
 
         for key, value in inputs.items():
             datapoint = DatapointFactory.create(self, key, value)
 
             if datapoint is not None:
-                self.__inputs[key] = datapoint
+                self._inputs[key] = datapoint
 
         for key, value in outputs.items():
             datapoint = DatapointFactory.create(self, key, value)
 
             if datapoint is not None:
-                self.__outputs[key] = datapoint
+                self._outputs[key] = datapoint
 
     def __str__(self) -> str:
 
-        if self.__floor is None:
+        if self._floor is None:
             floor = '<Not set>'
         else:
-            floor = self.__floor.getName()
+            floor = self._floor.getName()
         
-        if self.__room is None:
+        if self._room is None:
             room = '<Not set>'
         else:
-            room = self.__room.getName()
+            room = self._room.getName()
 
         string = (
-            f"Identifier: {self.__identifier}\n"
-            f"Name      : {self.__displayName}\n"
+            f"Identifier: {self._identifier}\n"
+            f"Name      : {self._displayName}\n"
             f"Floor     : {floor}\n"
             f"Room      : {room}\n"
-            f"Function  : {self.__functionID}"
+            f"Function  : {self._functionID}"
         )
 
         string = (
             f"{string}\n"
-            f"Inputs: {len(self.__inputs)}\n"
+            f"Inputs: {len(self._inputs)}\n"
             f"----------"
         )
 
-        for key, input in self.__inputs.items():
+        for key, input in self._inputs.items():
             value = str(input)
             string = (
                 f"{string}\n"
@@ -90,11 +90,11 @@ class AbstractChannel(ABC):
 
         string = (
             f"{string}\n"
-            f"Outputs: {len(self.__outputs)}\n"
+            f"Outputs: {len(self._outputs)}\n"
             f"----------"
         )
 
-        for key, output in self.__outputs.items():
+        for key, output in self._outputs.items():
             value = str(output)
             string = (
                 f"{string}\n"
@@ -104,11 +104,11 @@ class AbstractChannel(ABC):
 
         string = (
             f"{string}\n"
-            f"Parameters: {len(self.__parameters)}\n"
+            f"Parameters: {len(self._parameters)}\n"
             f"----------"
         )
 
-        for key, parameter in self.__parameters.items():
+        for key, parameter in self._parameters.items():
             value = str(parameter)
             string = (
                 f"{string}\n"
@@ -119,16 +119,16 @@ class AbstractChannel(ABC):
         return string
 
     def getDevice(self):
-        return self.__device
+        return self._device
 
     def getIdentifier(self) -> str:
-        return self.__identifier
+        return self._identifier
 
     def getDisplayName(self) -> str:
-        return self.__displayName
+        return self._displayName
 
     def getInputs(self):
-        return self.__inputs
+        return self._inputs
 
     def updateFromDict(self, key, value):
         """Return Datapoint object from Free@Home API response.
@@ -142,6 +142,24 @@ class AbstractChannel(ABC):
             The updated Datapoint object.
         """
 
-        if key in self.__outputs:
-            datapoint = self.__outputs[key].setValue(value)
+        if key in self._outputs:
+            datapoint = self._outputs[key].setValue(value)
             return datapoint
+
+    def getOutputByPairingID(self, pairingID) -> AbstractDatapoint:
+
+        for key, value in self._outputs.items():
+
+            if value.getPairingID() == pairingID:
+                return value
+        
+        raise NameError
+
+    def getInputByPairingID(self, pairingID) -> AbstractDatapoint:
+    
+        for key, value in self._inputs.items():
+
+            if value.getPairingID() == pairingID:
+                return value
+        
+        raise NameError

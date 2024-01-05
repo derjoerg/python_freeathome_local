@@ -94,7 +94,7 @@ class FreeAtHome:
             )
             raise FreeAtHomeConnectionError(msg) from excpetion
 
-    async def listen(self, callback: Callable[[SysAp], None]) -> None:
+    async def listen(self, callback: Callable[[list], None]) -> None:
         """Listen for events on the FreeAtHome WebSocket.
 
         Args:
@@ -124,8 +124,8 @@ class FreeAtHome:
                 messageData = message.json()
 
                 if str(self._sysAp.getId()) == list(messageData.keys())[0]:
-                    sysap = self._sysAp.updateFromDict(data=messageData[str(self._sysAp.getId())])
-                    callback(sysap)
+                    datapoints = self._sysAp.updateFromDict(data=messageData[str(self._sysAp.getId())])
+                    callback(datapoints)
             
             if message.type in (
                 aiohttp.WSMsgType.CLOSE,

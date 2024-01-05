@@ -91,6 +91,9 @@ class AbstractDevice(ABC):
 
     def getChannelById(self, id: str) -> AbstractChannel:
         return self.__channels[id]
+    
+    def getDisplayName(self) -> str:
+        return self.__displayName
 
     def updateFromDict(self, key, value):
         """Return Channel object from Free@Home API response.

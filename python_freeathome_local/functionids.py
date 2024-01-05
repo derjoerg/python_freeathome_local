@@ -1,8 +1,17 @@
 """ Asynchronous Python client for the local Busch-Jaeger Free@Home API."""
 
-from enum import Enum
+import enum
 
-class FunctionIDs(Enum):
+class MyEnumMeta(enum.EnumMeta):
+    def __contains__(cls, item):
+        try:
+            cls(item)
+        except ValueError:
+            return False
+        else:
+            return True
+
+class FunctionIDs(enum.Enum, metaclass=MyEnumMeta):
     FID_SWITCH_SENSOR = 0x0000
     FID_DIMMING_SENSOR = 0x0001
     FID_SHUTTER_SENSOR = 0x0002

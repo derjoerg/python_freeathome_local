@@ -40,6 +40,14 @@ class AbstractDatapoint(ABC):
         return self.__pairingID
 
     def setValue(self, value):
+
+        if type(value) == bool:
+
+            if value == True:
+                value = 1
+            elif value == False:
+                value = 0
+
         self.__value = value
         return self
 
