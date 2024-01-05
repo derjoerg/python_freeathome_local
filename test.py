@@ -6,6 +6,7 @@ import os
 
 from python_freeathome_local.freeathome import FreeAtHome
 from python_freeathome_local.models.sysap import SysAp
+from python_freeathome_local.functionids import FunctionIDs
 
 async def main() -> None:
     async with FreeAtHome(
@@ -36,6 +37,8 @@ async def main() -> None:
             #print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0001").getState())
             #print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0001").getRainSensorActivationPercentage())
             #print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0001").getRainSensorFrequency())
+            # WindowDoorSensor
+            #print(sysAp.getDeviceById("ABB28CBC3651").getChannelById("ch0002").getState())
 
             # Trigger
             #result = await sysAp.getDeviceById("ABB28EBC3651").getChannelById("ch0012").press()
@@ -48,15 +51,16 @@ async def main() -> None:
             print("\tReceived an update from SysAp")
 
             for datapoint in datapoints:
-                print(
-                    datapoint.getChannel().getDevice().getSerialNumber(),
-                    '(', datapoint.getChannel().getDevice().getDisplayName(), ')',
-                    ' - ',
-                    datapoint.getChannel().getIdentifier(),
-                    '(', datapoint.getChannel().getDisplayName(), ')',
-                    ' - ',
-                    datapoint.getPairingID().name, ' : ', datapoint.getValue()
-                )
+
+                    print(
+                        datapoint.getChannel().getDevice().getSerialNumber(),
+                        '(', datapoint.getChannel().getDevice().getDisplayName(), ')',
+                        ' - ',
+                        datapoint.getChannel().getIdentifier(),
+                        '(', datapoint.getChannel().getDisplayName(), ')',
+                        ' - ',
+                        datapoint.getPairingID().name, ' : ', datapoint.getValue()
+                    )
         
         # Start listening
         task = asyncio.create_task(freeathome.listen(callback=somethingUpdated))

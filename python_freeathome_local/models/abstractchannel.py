@@ -127,6 +127,9 @@ class AbstractChannel(ABC):
     def getDisplayName(self) -> str:
         return self._displayName
 
+    def getFunctionID(self):
+        return self._functionID
+
     def getInputs(self):
         return self._inputs
 
