@@ -10,8 +10,9 @@ from .brightnesssensorchannel import BrightnessSensorChannel
 from .windsensorchannel import WindSensorChannel
 from .switchactuatorchannel import SwitchActuatorChannel
 from .rainsensorchannel import RainSensorChannel
-from .switchsensorchannel import SwitchSensorChannel
+#from .switchsensorchannel import SwitchSensorChannel
 from .windowdoorsensorchannel import WindowDoorSensorChannel
+from .movementdetectorchannel import MovementDetectorChannel
 from ..functionids import FunctionIDs
 from .floor import Floor
 

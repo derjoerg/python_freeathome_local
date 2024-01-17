@@ -25,3 +25,4 @@ E.g. the WeatherStation has a parameter called 'par0039' (TRANSMISSION_INTERVAL)
 | Trigger | TimedStartStop - press | - |
 | SwitchActuator | SwitchOnOff(bool) - turnOn/turnOff<br>Forced(bool)<br>TimedStartStop(bool)<br>TimedMovement(bool) | InfoOnOff (bool) - state<br>InfoForce (bool)<br>InfoError (bool) |
 | WindowDoorSensor | - | WindowDoor (bool) - state |
+| MovementDetector | InfoOnOff | InfoOnOff (bool) - state<br>BrightnessLevel (float)<br>TimedMovement (bool)<br>TimedPresence (bool) |

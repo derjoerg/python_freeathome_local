@@ -148,6 +148,14 @@ class AbstractChannel(ABC):
         if key in self._outputs:
             datapoint = self._outputs[key].setValue(value)
             return datapoint
+        elif key in self._inputs:
+            # Very special handling for MovementDetector because 
+            # for whatever reason an Input-Datapoint is set through
+            # the websocket instead of an Output-Datapoint ...
+            datapoint = self._inputs[key].setSpecialValue(value)
+            return datapoint
+        else:
+            print(self.getDisplayName(), ' - ', key, ' : ', value)
 
     def getOutputByPairingID(self, pairingID) -> AbstractDatapoint:
 

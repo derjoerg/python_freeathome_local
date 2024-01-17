@@ -28,3 +28,6 @@ class InputDatapoint(AbstractDatapoint):
     async def setValue(self, value: int):
         super().setValue(value)
         return await self.getChannel().getDevice().getSysAp().getApi().setDatapoint(self)
+    
+    def setSpecialValue(self, value: int):
+        return super().setValue(value)
