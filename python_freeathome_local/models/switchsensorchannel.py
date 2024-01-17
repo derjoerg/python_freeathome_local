@@ -30,3 +30,10 @@ class SwitchSensorChannel(AbstractChannel):
             f"Trigger-Channel:\n"
             f"{parent}"
         )
+
+    def getSwitchOnOff(self):
+        datapoint = self.getOutputByPairingID(PairingIDs.AL_SWITCH_ON_OFF)
+        return datapoint.getValue() == '1'
+
+    def getState(self):
+        return self.getSwitchOnOff()

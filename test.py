@@ -40,9 +40,12 @@ async def main() -> None:
             # WindowDoorSensor
             #print(sysAp.getDeviceById("ABB28CBC3651").getChannelById("ch0002").getState())
             # MovementDetector
-            print(sysAp.getDeviceById("ABB700DA100B").getChannelById("ch0000"))
-            print(sysAp.getDeviceById("ABB700DA100B").getChannelById("ch0000").getBrightnessLevel())
-            print(sysAp.getDeviceById("ABB700DA100B").getChannelById("ch0000").getState())
+            #print(sysAp.getDeviceById("ABB700DA100B").getChannelById("ch0000"))
+            #print(sysAp.getDeviceById("ABB700DA100B").getChannelById("ch0000").getBrightnessLevel())
+            #print(sysAp.getDeviceById("ABB700DA100B").getChannelById("ch0000").getState())
+            #SwitchSensor
+            print(sysAp.getDeviceById("ABB700D9C0A4").getChannelById("ch0000"))
+            print(sysAp.getDeviceById("ABB700D9C0A4").getChannelById("ch0000").getState())
 
             # Trigger
             #result = await sysAp.getDeviceById("ABB28EBC3651").getChannelById("ch0012").press()
@@ -55,7 +58,6 @@ async def main() -> None:
             print("\tReceived an update from SysAp")
 
             for datapoint in datapoints:
-                if datapoint.getChannel().getFunctionID() == FunctionIDs.FID_MOVEMENT_DETECTOR and datapoint.getChannel().getDevice().getSerialNumber() == 'ABB700DA100B':
                     print(
                         datapoint.getChannel().getDevice().getSerialNumber(),
                         '(', datapoint.getChannel().getDevice().getDisplayName(), ')',
