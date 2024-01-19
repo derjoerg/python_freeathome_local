@@ -18,6 +18,8 @@ class SysAp:
     __id: UUID
     __connectionState: str
     __name: str
+    __uartSerialNumber: str
+    __version: str
     __devices: {}
     __floorplan: Floorplan | None = None
 
@@ -45,11 +47,28 @@ class SysAp:
         if "sysapName" in config:
             sysapName = config["sysapName"]
         
+        if "sysap" in config:
+            uartSerialNumber = ""
+
+            if "uartSerialNumber" in config["sysap"]:
+                uartSerialNumber = config["sysap"]["uartSerialNumber"]
+
+            version = ""
+
+            if "version" in config["sysap"]:
+                version = config["sysap"]["version"]
+
+        else:
+            msg = f"SysapSection missing"
+            raise FreeAtHomeError(msg)
+
         sysAp = cls(
             api= api,
             id= correctId,
             connectionState= connState,
             name= sysapName,
+            uartSerialNumber= uartSerialNumber,
+            version= version,
         )
 
         if sysApOnly is False:
@@ -103,10 +122,12 @@ class SysAp:
 
     def __str__(self) -> str:
         string = (
-            f"Name   : {self.__name}\n"
-            f"Id     : {self.__id}\n"
-            f"State  : {self.__connectionState}\n"
-            f"Devices: {len(self.__devices)}"
+            f"Name      : {self.__name}\n"
+            f"Id        : {self.__id}\n"
+            f"State     : {self.__connectionState}\n"
+            f"uartSerial: {self.__uartSerialNumber}\n"
+            f"Version   : {self.__version}\n"
+            f"Devices   : {len(self.__devices)}"
         )
 
         for key, device in self.__devices.items():
@@ -125,7 +146,7 @@ class SysAp:
         
         return string
 
-    def __init__(self, api: object, id: str, connectionState: bool, name: str) -> None:
+    def __init__(self, api: object, id: str, connectionState: bool, name: str, uartSerialNumber: str, version: str) -> None:
         """Initialize a SysAp device class.
 
         Args:
@@ -141,6 +162,8 @@ class SysAp:
         self.__id = id
         self.__connectionState = connectionState
         self.__name = name
+        self.__uartSerialNumber = uartSerialNumber
+        self.__version = version
         self.__devices = {}
 
     def getApi(self):
