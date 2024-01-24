@@ -1,37 +1,38 @@
-""" Asynchronous Python client for the local Busch-Jaeger Free@Home API."""
+"""Asynchronous Python client for the local Busch-Jaeger Free@Home API."""
 
 from __future__ import annotations
 
 import asyncio
-import socket
 import json
+import socket
+from base64 import b64encode
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, cast
+
 import aiohttp
-from aiohttp import BasicAuth, ClientError, ClientResponseError, ClientSession, ClientWebSocketResponse
-from aiohttp.hdrs import METH_PUT, METH_GET
-import async_timeout
+from aiohttp import ClientSession, ClientWebSocketResponse
+from aiohttp.hdrs import METH_GET, METH_PUT
 from yarl import URL
-from base64 import b64encode
 
-from .pairingids import PairingIDs
-from .models.sysap import SysAp
-
-from .exceptions import(
-    FreeAtHomeError,
-    FreeAtHomeConnectionTimeoutError,
-    FreeAtHomeUnauthorizedError,
-    FreeAtHomeConnectionError,
+from .exceptions import (
     FreeAtHomeConnectionClosedError,
+    FreeAtHomeConnectionError,
+    FreeAtHomeConnectionTimeoutError,
     FreeAtHomeEmptyResponseError,
+    FreeAtHomeError,
 )
+from .models.inputdatapoint import InputDatapoint
+from .models.sysap import SysAp
 
 if TYPE_CHECKING:
     from type_extensions import Self
 
+
 @dataclass
 class FreeAtHome:
     """Main class for handling connections with Free@Home."""
+
     session: ClientSession | None = None
     requestTimeout: float = 10.0
     _client: ClientWebSocketResponse | None = None
@@ -72,18 +73,22 @@ class FreeAtHome:
             self._closeSession = True
 
         if not self.session:
-            msg = f"There is a generic problem with the session to the SysAp"
+            msg = "There is a generic problem with the session to the SysAp"
             raise FreeAtHomeError(msg)
 
-        basicAuth = b64encode((self.user + ":" + self.password).encode()).decode("ascii")
+        basicAuth = b64encode(
+            (self.user + ":" + self.password).encode()
+        ).decode("ascii")
         headers = {
             "Authorization": f"Basic {basicAuth}",
         }
         url = URL.build(scheme="ws", host=self.host, port=80, path=self.wsPath)
 
         try:
-            self._client = await self.session.ws_connect(url=url, headers=headers)
-        except(
+            self._client = await self.session.ws_connect(
+                url=url, headers=headers
+            )
+        except (
             aiohttp.WSServerHandshakeError,
             aiohttp.ClientConnectionError,
             socket.gaierror,
@@ -101,7 +106,7 @@ class FreeAtHome:
         ----
             callback: Method to call when a state update is receivecd from
                 the SysAp.
-        
+
         Raises:
         ------
             FreeAtHomeError: Not connected to a WebSocket.
@@ -113,45 +118,51 @@ class FreeAtHome:
         if not self._client or not self.connected:
             msg = "Not connected a SysAp WebSocket"
             raise FreeAtHomeError(msg)
-        
+
         while not self._client.closed:
             message = await self._client.receive()
 
             if message.type == aiohttp.WSMsgType.ERROR:
                 raise FreeAtHomeConnectionError(self._client.exception())
-            
+
             if message.type == aiohttp.WSMsgType.TEXT:
                 messageData = message.json()
 
                 if str(self._sysAp.getId()) == list(messageData.keys())[0]:
-                    datapoints = self._sysAp.updateFromDict(data=messageData[str(self._sysAp.getId())])
+                    datapoints = self._sysAp.updateFromDict(
+                        data=messageData[str(self._sysAp.getId())]
+                    )
                     callback(datapoints)
-            
+
             if message.type in (
                 aiohttp.WSMsgType.CLOSE,
                 aiohttp.WSMsgType.CLOSED,
                 aiohttp.WSMsgType.CLOSING,
             ):
-                msg = f"Connection to the SysAp WebSocket on {self.host} has been closed"
+                msg = (
+                    f"Connection to the SysAp WebSocket on "
+                    f"{self.host} has been closed"
+                )
                 raise FreeAtHomeConnectionClosedError(msg)
 
     async def disconnect(self) -> None:
         """Disconnect from the WebSocket of a SysAp."""
         if not self._client or not self.connected:
             return
-        
+
         await self._client.close()
 
     async def setDatapoint(self, datapoint: InputDatapoint):
+        """Send value to a datapoint on the SysAp."""
         uri = (
-            "datapoint/" +
-            str(datapoint.getChannel().getDevice().getSysAp().getId()) +
-            "/" +
-            datapoint.getChannel().getDevice().getSerialNumber() +
-            "." +
-            datapoint.getChannel().getIdentifier() +
-            "." +
-            datapoint.getIdentifier()
+            "datapoint/"
+            + str(datapoint.getChannel().getDevice().getSysAp().getId())
+            + "/"
+            + datapoint.getChannel().getDevice().getSerialNumber()
+            + "."
+            + datapoint.getChannel().getIdentifier()
+            + "."
+            + datapoint.getIdentifier()
         )
         print(f"{uri}")
         data = str(datapoint.getValue())
@@ -174,12 +185,12 @@ class FreeAtHome:
             uri: Request URI, for example `/fhapi/v1`.
             method: HTTP method to use for the request e.g. "GET" or "POST"
             data: Dictionary of data to send to the SysAp.
-        
+
         Return:
         ------
             A Python dictionary (JSON decoded) with the response from the
             SysAp.
-        
+
         Raises:
             FreeAtHomeConnectionError: An error occured while communicating
                 with the SysAp.
@@ -197,7 +208,7 @@ class FreeAtHome:
         ).joinpath(uri)
 
         headers = {
-            "User-Agent": f"PythonFreeAtHome",
+            "User-Agent": "PythonFreeAtHome",
             "Accept": "application/json, text/plain, */*",
         }
 
@@ -230,7 +241,7 @@ class FreeAtHome:
             else:
                 responseData = await response.text()
 
-        except asyncio.TimeoutError as exception:
+        except TimeoutError as exception:
             msg = f"Timeout occured while connecting to SysAp at {self.host}"
             raise FreeAtHomeConnectionTimeoutError(msg) from exception
         except (aiohttp.ClientError, socket.gaierror) as exception:
@@ -248,22 +259,22 @@ class FreeAtHome:
         Returns:
         -------
             SysAp
-        
+
         Raises:
         ------
             FreeAtHomeEmptyResponseError: The SysAp returned an empty response.
         """
-#        if self._sysAp is None:
+        #        if self._sysAp is None:
         response = await self.request("configuration", METH_GET)
 
         if 1 == len(response):
             uuid = list(response.keys())[0]
             self._sysAp = SysAp.fromApi(self, uuid, response[uuid], sysApOnly)
-        
+
         if self._sysAp is None:
             msg = f"The needed configuration was not received from {self.host}"
-            raise FreeAtHomeEmptyResponseError(msg) from exception
-        
+            raise FreeAtHomeEmptyResponseError(msg) from Exception
+
         return self._sysAp
 
     async def close(self) -> None:

@@ -1,8 +1,10 @@
 """Asynchronous Python client for Free@Home."""
 
 from __future__ import annotations
-from dataclasses import dataclass, field
+
+from dataclasses import dataclass
 from typing import Any
+
 
 @dataclass
 class Room:
@@ -12,6 +14,7 @@ class Room:
     __name: str = ""
 
     def __init__(self, id: hex, config: dict[str, Any]):
+        """Initialize a Room."""
         self.__id = id
         self.__name = ""
 
@@ -19,12 +22,13 @@ class Room:
             self.__name = config["name"]
 
     def __str__(self) -> str:
-        return(
-            f"{self.__id} - {self.__name}"
-        )
+        """Redefine object-to-string."""
+        return f"{self.__id} - {self.__name}"
 
     def getId(self) -> hex:
+        """Return Id of Room."""
         return self.__id
-    
+
     def getName(self) -> str:
+        """Return Name of Room."""
         return self.__name

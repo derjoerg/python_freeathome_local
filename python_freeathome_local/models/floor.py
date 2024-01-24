@@ -1,10 +1,13 @@
 """Asynchronous Python client for Free@Home."""
 
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Any
+
 import textwrap
+from dataclasses import dataclass
+from typing import Any
+
 from .room import Room
+
 
 @dataclass
 class Floor:
@@ -15,6 +18,7 @@ class Floor:
     __rooms: {} | None = None
 
     def __init__(self, id: hex, config: dict[str, Any]):
+        """Initialize a Floor."""
         self.__id = id
         self.__name = ""
         self.__rooms = {}
@@ -23,7 +27,6 @@ class Floor:
             self.__name = config["name"]
 
         if "rooms" in config:
-
             for key, value in config["rooms"].items():
                 roomId = int(key, 16)
                 room = Room(roomId, value)
@@ -31,10 +34,8 @@ class Floor:
                 self.__rooms[roomId] = room
 
     def __str__(self) -> str:
-        string = (
-            f"{self.__id} - {self.__name}\n"
-            f"Rooms: {len(self.__rooms)}"
-        )
+        """Redefine object-to-string."""
+        string = f"{self.__id} - {self.__name}\n" f"Rooms: {len(self.__rooms)}"
 
         for key, room in self.__rooms.items():
             value = str(room)
@@ -47,10 +48,13 @@ class Floor:
         return string
 
     def getRoomById(self, id: hex) -> Room:
+        """Return Room by specific ID."""
         return self.__rooms[id]
 
     def getId(self) -> hex:
+        """Return Id of a Floor."""
         return self.__id
 
     def getName(self) -> str:
+        """Return Name of a Floor."""
         return self.__name

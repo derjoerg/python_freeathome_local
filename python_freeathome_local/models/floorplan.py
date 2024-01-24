@@ -1,10 +1,13 @@
 """Asynchronous Python client for Free@Home."""
 
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Any
+
 import textwrap
+from dataclasses import dataclass
+from typing import Any
+
 from .floor import Floor
+
 
 @dataclass
 class Floorplan:
@@ -13,6 +16,7 @@ class Floorplan:
     __floors: {}
 
     def __init__(self, config: dict[str, Any]):
+        """Initialize a Floorplan."""
         self.__floors = {}
 
         for key, value in config.items():
@@ -22,9 +26,8 @@ class Floorplan:
             self.__floors[floorId] = floor
 
     def __str__(self) -> str:
-        string = (
-            f"Floors: {len(self.__floors)}"
-        )
+        """Redefine object-to-string."""
+        string = f"Floors: {len(self.__floors)}"
 
         for key, floor in self.__floors.items():
             value = str(floor)
@@ -37,4 +40,5 @@ class Floorplan:
         return string
 
     def getFloorById(self, id: hex) -> Floor:
+        """Return Floor by specific ID."""
         return self.__floors[id]

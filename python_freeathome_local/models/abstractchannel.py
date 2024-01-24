@@ -2,15 +2,20 @@
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
 import textwrap
+from abc import ABC
+from typing import TYPE_CHECKING, Any
 
 from ..functionids import FunctionIDs
-from ..pairingids import PairingIDs
-from .parameterfactory import ParameterFactory
 from .datapointfactory import DatapointFactory
-from .inputdatapoint import InputDatapoint
-from .outputdatapoint import OutputDatapoint
+from .parameterfactory import ParameterFactory
+
+if TYPE_CHECKING:
+    from .abstractdatapoint import AbstractDatapoint
+    from .abstractdevice import AbstractDevice
+    from .floor import Floor
+    from .room import Room
+
 
 class AbstractChannel(ABC):
     """Model for an abstract Channel."""
@@ -25,7 +30,19 @@ class AbstractChannel(ABC):
     _outputs: {}
     _parameters: {}
 
-    def __init__(self, device: AbstractDevice, identifier: str, floor: Floor | None, room: Room | None, displayName: str, functionID: FunctionIDs, parameters: dict[str, Any], inputs: dict[str, Any], outputs: dict[str, Any]):
+    def __init__(
+        self,
+        device: AbstractDevice,
+        identifier: str,
+        floor: Floor | None,
+        room: Room | None,
+        displayName: str,
+        functionID: FunctionIDs,
+        parameters: dict[str, Any],
+        inputs: dict[str, Any],
+        outputs: dict[str, Any],
+    ):
+        """Initialize an AbstractChannel."""
         self._device = device
         self._identifier = identifier
         self._floor = floor
@@ -55,14 +72,14 @@ class AbstractChannel(ABC):
                 self._outputs[key] = datapoint
 
     def __str__(self) -> str:
-
+        """Redefine object-to-string."""
         if self._floor is None:
-            floor = '<Not set>'
+            floor = "<Not set>"
         else:
             floor = self._floor.getName()
-        
+
         if self._room is None:
-            room = '<Not set>'
+            room = "<Not set>"
         else:
             room = self._room.getName()
 
@@ -74,11 +91,7 @@ class AbstractChannel(ABC):
             f"Function  : {self._functionID}"
         )
 
-        string = (
-            f"{string}\n"
-            f"Inputs: {len(self._inputs)}\n"
-            f"----------"
-        )
+        string = f"{string}\n" f"Inputs: {len(self._inputs)}\n" f"----------"
 
         for key, input in self._inputs.items():
             value = str(input)
@@ -88,11 +101,7 @@ class AbstractChannel(ABC):
                 f"----------"
             )
 
-        string = (
-            f"{string}\n"
-            f"Outputs: {len(self._outputs)}\n"
-            f"----------"
-        )
+        string = f"{string}\n" f"Outputs: {len(self._outputs)}\n" f"----------"
 
         for key, output in self._outputs.items():
             value = str(output)
@@ -103,9 +112,7 @@ class AbstractChannel(ABC):
             )
 
         string = (
-            f"{string}\n"
-            f"Parameters: {len(self._parameters)}\n"
-            f"----------"
+            f"{string}\n" f"Parameters: {len(self._parameters)}\n" f"----------"
         )
 
         for key, parameter in self._parameters.items():
@@ -115,22 +122,27 @@ class AbstractChannel(ABC):
                 f"{textwrap.indent(value, '    ')}\n"
                 f"----------"
             )
-        
+
         return string
 
     def getDevice(self):
+        """Return Device of the Channel."""
         return self._device
 
     def getIdentifier(self) -> str:
+        """Return Identifier of the Channel."""
         return self._identifier
 
     def getDisplayName(self) -> str:
+        """Return DisplayName of the Channel."""
         return self._displayName
 
     def getFunctionID(self):
+        """Return FunctionID of the Channel."""
         return self._functionID
 
     def getInputs(self):
+        """Return all InputDatapoints of the Channel."""
         return self._inputs
 
     def updateFromDict(self, key, value):
@@ -139,38 +151,35 @@ class AbstractChannel(ABC):
         Args:
         ----
             data: Update everything based on the websocket data
-        
+
         Returns:
         -------
             The updated Datapoint object.
         """
-
         if key in self._outputs:
             datapoint = self._outputs[key].setValue(value)
             return datapoint
         elif key in self._inputs:
-            # Very special handling for MovementDetector because 
+            # Very special handling for MovementDetector because
             # for whatever reason an Input-Datapoint is set through
             # the websocket instead of an Output-Datapoint ...
             datapoint = self._inputs[key].setSpecialValue(value)
             return datapoint
         else:
-            print(self.getDisplayName(), ' - ', key, ' : ', value)
+            print(self.getDisplayName(), " - ", key, " : ", value)
 
     def getOutputByPairingID(self, pairingID) -> AbstractDatapoint:
-
+        """Return OutputDatapoint of a specific PairingID."""
         for key, value in self._outputs.items():
-
             if value.getPairingID() == pairingID:
                 return value
-        
+
         raise NameError
 
     def getInputByPairingID(self, pairingID) -> AbstractDatapoint:
-    
+        """Return InputDatapoint of a specific PairingID."""
         for key, value in self._inputs.items():
-
             if value.getPairingID() == pairingID:
                 return value
-        
+
         raise NameError

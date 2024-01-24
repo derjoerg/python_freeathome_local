@@ -2,13 +2,18 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Any
-from uuid import UUID
 import textwrap
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Any, Self
+from uuid import UUID
+
 from .abstractdevice import AbstractDevice
 from .devicefactory import DeviceFactory
 from .floorplan import Floorplan
+
+if TYPE_CHECKING:
+    from ..exceptions import FreeAtHomeError
+
 
 @dataclass
 class SysAp:
@@ -24,29 +29,31 @@ class SysAp:
     __floorplan: Floorplan | None = None
 
     @classmethod
-    def fromApi(cls, api: object, id: str, config: dict[str, Any], sysApOnly: bool = True) -> Self:
-        """Initialize a SysAp device from the API.
-
-        Args:
-        ----
-        """
+    def fromApi(
+        cls,
+        api: object,
+        id: str,
+        config: dict[str, Any],
+        sysApOnly: bool = True,
+    ) -> Self:
+        """Initialize a SysAp device from the API."""
         try:
             correctId = UUID(str(id))
         except ValueError:
             msg = f"The provided id '{id}' is malformed."
             raise FreeAtHomeError(msg)
-        
+
         if "connectionState" in config:
             connState = config["connectionState"]
         else:
-            msg = f"connectionState is not defined"
+            msg = "connectionState is not defined"
             raise FreeAtHomeError(msg)
-        
+
         sysapName = ""
 
         if "sysapName" in config:
             sysapName = config["sysapName"]
-        
+
         if "sysap" in config:
             uartSerialNumber = ""
 
@@ -59,33 +66,30 @@ class SysAp:
                 version = config["sysap"]["version"]
 
         else:
-            msg = f"SysapSection missing"
+            msg = "SysapSection missing"
             raise FreeAtHomeError(msg)
 
         sysAp = cls(
-            api= api,
-            id= correctId,
-            connectionState= connState,
-            name= sysapName,
-            uartSerialNumber= uartSerialNumber,
-            version= version,
+            api=api,
+            id=correctId,
+            connectionState=connState,
+            name=sysapName,
+            uartSerialNumber=uartSerialNumber,
+            version=version,
         )
 
         if sysApOnly is False:
-
             if "floorplan" in config:
-
                 for key, value in config["floorplan"].items():
                     sysAp.__floorplan = Floorplan(value)
 
             if "devices" in config:
-
                 for key, value in config["devices"].items():
                     device = DeviceFactory.create(sysAp, key, value)
 
                     if device is not None:
                         sysAp.setDevice(key, device)
-#                        sysAp.__devices[key] = device
+        #                        sysAp.__devices[key] = device
 
         return sysAp
 
@@ -95,7 +99,7 @@ class SysAp:
         Args:
         ----
             data: Update everything based on the websocket data
-        
+
         Returns:
         -------
             The updated datapoint objects as list.
@@ -103,24 +107,32 @@ class SysAp:
         datapoints = []
 
         if "datapoints" in data:
-
             for key, value in data["datapoints"].items():
-                splitted = key.split('/', 1)
-                #print(key, " has the value ", value)
+                splitted = key.split("/", 1)
+                # print(key, " has the value ", value)
 
                 if splitted[0] in self.__devices:
-                    datapoint = self.__devices[splitted[0]].updateFromDict(splitted[1], value)
+                    datapoint = self.__devices[splitted[0]].updateFromDict(
+                        splitted[1], value
+                    )
 
                     if datapoint is not None:
                         datapoints.append(datapoint)
-                        #print(datapoint.getChannel().getDisplayName(), " - ", datapoint.getPairingID().name, " : ", datapoint.getValue())
+                        # print(
+                        #     datapoint.getChannel().getDisplayName(),
+                        #     " - ",
+                        #     datapoint.getPairingID().name,
+                        #     " : ",
+                        #     datapoint.getValue()
+                        # )
 
-                #else:
+                # else:
                 #    print(f"Not defined : {key} has the value {value}")
 
         return datapoints
 
     def __str__(self) -> str:
+        """Redefine object-to-string."""
         string = (
             f"Name      : {self.__name}\n"
             f"Id        : {self.__id}\n"
@@ -139,14 +151,19 @@ class SysAp:
             )
 
         value = str(self.__floorplan)
-        string = (
-            f"{string}\n"
-            f"{textwrap.indent(value, '    ')}"
-        )
-        
+        string = f"{string}\n" f"{textwrap.indent(value, '    ')}"
+
         return string
 
-    def __init__(self, api: object, id: str, connectionState: bool, name: str, uartSerialNumber: str, version: str) -> None:
+    def __init__(
+        self,
+        api: object,
+        id: str,
+        connectionState: bool,
+        name: str,
+        uartSerialNumber: str,
+        version: str,
+    ) -> None:
         """Initialize a SysAp device class.
 
         Args:
@@ -167,16 +184,21 @@ class SysAp:
         self.__devices = {}
 
     def getApi(self):
+        """Return API."""
         return self.__api
 
     def getId(self) -> UUID:
+        """Return Id of SysAp."""
         return self.__id
 
     def getFloorplan(self) -> Floorplan:
+        """Return Floorplan."""
         return self.__floorplan
 
     def getDeviceById(self, id: str) -> AbstractDevice:
+        """Return specific Device by ID."""
         return self.__devices[id]
 
     def setDevice(self, key: str, device: AbstractDevice) -> None:
+        """Set specific Device."""
         self.__devices[key] = device

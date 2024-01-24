@@ -1,9 +1,14 @@
-""" Asynchronous Python client for the local Busch-Jaeger Free@Home API."""
+"""Asynchronous Python client for the local Busch-Jaeger Free@Home API."""
 
 import enum
 
+
+# pylint: disable=no-value-for-parameter,line-too-long
 class MyEnumMeta(enum.EnumMeta):
+    """EnumMeta."""
+
     def __contains__(cls, item):
+        """Find for an enum."""
         try:
             cls(item)
         except ValueError:
@@ -11,7 +16,10 @@ class MyEnumMeta(enum.EnumMeta):
         else:
             return True
 
+
 class FunctionIDs(enum.Enum, metaclass=MyEnumMeta):
+    """All FunctionIDs from FreeAtHome."""
+
     FID_SWITCH_SENSOR = 0x0000
     FID_DIMMING_SENSOR = 0x0001
     FID_SHUTTER_SENSOR = 0x0002
