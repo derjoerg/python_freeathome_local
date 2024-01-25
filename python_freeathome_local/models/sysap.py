@@ -13,25 +13,26 @@ from .floorplan import Floorplan
 
 if TYPE_CHECKING:
     from ..exceptions import FreeAtHomeError
+    from ..freeathome import FreeAtHome
 
 
 @dataclass
 class SysAp:
     """Model for a SysAp."""
 
-    __api: object
+    __api: FreeAtHome
     __id: UUID
     __connectionState: str
     __name: str
     __uartSerialNumber: str
     __version: str
-    __devices: {}
-    __floorplan: Floorplan | None = None
+    __devices: dict[str, AbstractDevice]
+    __floorplan: Floorplan
 
     @classmethod
     def fromApi(
         cls,
-        api: object,
+        api: FreeAtHome,
         id: str,
         config: dict[str, Any],
         sysApOnly: bool = True,
@@ -157,9 +158,9 @@ class SysAp:
 
     def __init__(
         self,
-        api: object,
-        id: str,
-        connectionState: bool,
+        api: FreeAtHome,
+        id: UUID,
+        connectionState: str,
         name: str,
         uartSerialNumber: str,
         version: str,
@@ -183,7 +184,7 @@ class SysAp:
         self.__version = version
         self.__devices = {}
 
-    def getApi(self):
+    def getApi(self) -> FreeAtHome:
         """Return API."""
         return self.__api
 

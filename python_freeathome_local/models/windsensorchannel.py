@@ -49,21 +49,21 @@ class WindSensorChannel(AbstractChannel):
         parent = super().__str__()
         return f"Trigger-Channel:\n" f"{parent}"
 
-    def getWindSpeed(self):
+    def getWindSpeed(self) -> float:
         """Return WindSpeed."""
         datapoint = self.getOutputByPairingID(PairingIDs.AL_WIND_SPEED)
         return float(datapoint.getValue())
 
-    def getState(self):
+    def getState(self) -> float:
         """Return WindSpeed."""
         return self.getWindSpeed()
 
-    def getWindAlarm(self):
+    def getWindAlarm(self) -> bool:
         """Return WindAlarm."""
         datapoint = self.getOutputByPairingID(PairingIDs.AL_WIND_ALARM)
         return datapoint.getValue() == "1"
 
-    def getWindForce(self):
+    def getWindForce(self) -> int:
         """Return WindForce."""
         datapoint = self.getOutputByPairingID(PairingIDs.AL_WIND_FORCE)
         return int(datapoint.getValue())

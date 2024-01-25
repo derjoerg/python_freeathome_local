@@ -10,10 +10,10 @@ from typing import Any
 class Room:
     """Model for a Room."""
 
-    __id: hex = 0x0
-    __name: str = ""
+    __id: int
+    __name: str
 
-    def __init__(self, id: hex, config: dict[str, Any]):
+    def __init__(self, id: int, config: dict[str, Any]):
         """Initialize a Room."""
         self.__id = id
         self.__name = ""
@@ -25,7 +25,7 @@ class Room:
         """Redefine object-to-string."""
         return f"{self.__id} - {self.__name}"
 
-    def getId(self) -> hex:
+    def getId(self) -> int:
         """Return Id of Room."""
         return self.__id
 

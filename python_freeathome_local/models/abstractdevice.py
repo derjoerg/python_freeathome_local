@@ -6,6 +6,7 @@ import textwrap
 from abc import ABC
 from typing import TYPE_CHECKING, Any
 
+from .abstractparameter import AbstractParameter
 from .channelfactory import ChannelFactory
 from .floor import Floor
 from .parameterfactory import ParameterFactory
@@ -13,13 +14,14 @@ from .room import Room
 
 if TYPE_CHECKING:
     from .abstractchannel import AbstractChannel
+    from .abstractdatapoint import AbstractDatapoint
     from .sysap import SysAp
 
 
 class AbstractDevice(ABC):
     """Model for an abstract Device."""
 
-    __sysAp: SysAp | None = None
+    __sysAp: SysAp
     __serialNumber: str = ""
     __floor: Floor | None = None
     __room: Room | None = None
@@ -27,8 +29,8 @@ class AbstractDevice(ABC):
     __unresponsive: bool = False
     __unresponsiveCounter: int = 0
     __defect: bool = False
-    __channels: {}
-    __parameters: {}
+    __channels: dict[str, AbstractChannel]
+    __parameters: dict[str, AbstractParameter]
 
     def __init__(
         self,
@@ -113,7 +115,7 @@ class AbstractDevice(ABC):
         """Return DisplayName of the Device."""
         return self.__displayName
 
-    def updateFromDict(self, key, value):
+    def updateFromDict(self, key: str, value: str) -> AbstractDatapoint | None:
         """Return Channel object from Free@Home API response.
 
         Args:
@@ -122,12 +124,14 @@ class AbstractDevice(ABC):
 
         Returns:
         -------
-            The updated Channel object.
+            The updated Datapoint object.
         """
+        datapoint = None
         splitted = key.split("/")
 
         if splitted[0] in self.__channels:
             datapoint = self.__channels[splitted[0]].updateFromDict(
                 splitted[1], value
             )
-            return datapoint
+
+        return datapoint

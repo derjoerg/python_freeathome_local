@@ -13,7 +13,7 @@ from .floor import Floor
 class Floorplan:
     """Model for a Floorplan."""
 
-    __floors: {}
+    __floors: dict[int, Floor]
 
     def __init__(self, config: dict[str, Any]):
         """Initialize a Floorplan."""
@@ -39,6 +39,6 @@ class Floorplan:
 
         return string
 
-    def getFloorById(self, id: hex) -> Floor:
+    def getFloorById(self, id: int) -> Floor:
         """Return Floor by specific ID."""
         return self.__floors[id]

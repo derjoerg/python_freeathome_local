@@ -10,6 +10,7 @@ from .inputdatapoint import InputDatapoint
 from .outputdatapoint import OutputDatapoint
 
 if TYPE_CHECKING:
+    from .abstractchannel import AbstractChannel
     from .abstractdatapoint import AbstractDatapoint
 
 
@@ -19,18 +20,17 @@ class DatapointFactory:
 
     @classmethod
     def create(
-        cls, channel: AbstractDatapoint, identifier: str, config: dict[str, Any]
+        cls, channel: AbstractChannel, identifier: str, config: dict[str, Any]
     ) -> AbstractDatapoint:
         """Create a specific parameter object based on provided config."""
-        pairingID = ""
+        pairingID = 0
         value = ""
 
         if "value" in config:
             value = config["value"]
 
         if "pairingID" in config:
-            # pairingID = int(config["pairingID"],16)
-            pairingID = config["pairingID"]
+            pairingID = int(config["pairingID"])
 
         for pairing in PairingIDs:
             if pairingID == pairing.value:
@@ -49,11 +49,11 @@ class DatapointFactory:
                 identifier=identifier,
                 pairingID=pairing,
                 value=value,
-            )
+            )  # type: ignore
 
         try:
             datapoint
         except NameError:
-            datapoint = None
+            datapoint = None  # type: ignore
 
         return datapoint

@@ -128,11 +128,12 @@ class FreeAtHome:
             if message.type == aiohttp.WSMsgType.TEXT:
                 messageData = message.json()
 
-                if str(self._sysAp.getId()) == list(messageData.keys())[0]:
-                    datapoints = self._sysAp.updateFromDict(
-                        data=messageData[str(self._sysAp.getId())]
-                    )
-                    callback(datapoints)
+                if isinstance(self._sysAp, SysAp):
+                    if str(self._sysAp.getId()) == list(messageData.keys())[0]:
+                        datapoints = self._sysAp.updateFromDict(
+                            data=messageData[str(self._sysAp.getId())]
+                        )
+                        callback(datapoints)
 
             if message.type in (
                 aiohttp.WSMsgType.CLOSE,
@@ -152,7 +153,7 @@ class FreeAtHome:
 
         await self._client.close()
 
-    async def setDatapoint(self, datapoint: InputDatapoint):
+    async def setDatapoint(self, datapoint: InputDatapoint) -> None:
         """Send value to a datapoint on the SysAp."""
         uri = (
             "datapoint/"
@@ -173,7 +174,7 @@ class FreeAtHome:
         self,
         uri: str,
         method: str = METH_GET,
-        data: dict[str, Any] | None = None,
+        data: Any = None,
     ) -> Any:
         """Handle a REST-request to Free@Home.
 
@@ -214,12 +215,13 @@ class FreeAtHome:
 
         try:
             async with asyncio.timeout(self.requestTimeout):
-                response = await self.session.request(
-                    method,
-                    url,
-                    headers=headers,
-                    data=data,
-                )
+                if isinstance(self.session, ClientSession):
+                    response = await self.session.request(
+                        method,
+                        url,
+                        headers=headers,
+                        data=data,
+                    )
             contentType = response.headers.get("Content-Type", "")
 
             if response.status // 100 in [4, 5]:

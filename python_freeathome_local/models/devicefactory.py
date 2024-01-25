@@ -20,34 +20,29 @@ class DeviceFactory:
     @classmethod
     def create(
         cls, sysAp: SysAp, serialNumber: str, config: dict[str, Any]
-    ) -> AbstractDevice:
+    ) -> AbstractDevice | None:
         """Create a specific device object based on provided config."""
-        floor = ""
-        room = ""
+        origFloor = ""
+        origRoom = ""
         displayName = ""
         unresponsive = False
         unresponsiveCounter = 0
         defect = False
         channels = {}
         parameters = {}
+        returnOK = False
 
         if "floor" in config:
-            floor = config["floor"]
+            origFloor = config["floor"]
 
-            if floor != "":
-                floor = sysAp.getFloorplan().getFloorById(int(floor, 16))
-
-        if floor == "":
-            floor = None
+            if origFloor != "":
+                floor = sysAp.getFloorplan().getFloorById(int(origFloor, 16))
 
         if "room" in config:
-            room = config["room"]
+            origRoom = config["room"]
 
-            if room != "" and isinstance(floor, Floor):
-                room = floor.getRoomById(int(room, 16))
-
-        if room == "":
-            room = None
+            if origRoom != "" and isinstance(floor, Floor):
+                room = floor.getRoomById(int(origRoom, 16))
 
         if "displayName" in config:
             displayName = config["displayName"]
@@ -86,8 +81,8 @@ class DeviceFactory:
                     sysAp=sysAp,
                     interface=interface,
                     serialNumber=serialNumber,
-                    floor=floor,
-                    room=room,
+                    floor=floor if "floor" in locals() else None,
+                    room=room if "room" in locals() else None,
                     displayName=displayName,
                     unresponsive=unresponsive,
                     unresponsiveCounter=unresponsiveCounter,
@@ -95,9 +90,10 @@ class DeviceFactory:
                     channels=channels,
                     parameters=parameters,
                 )
+                returnOK = True
 
                 if len(device.getChannels()) == 0:
-                    device = None
+                    returnOK = False
                     print("\tNo channels, so not added.")
 
             else:
@@ -114,9 +110,4 @@ class DeviceFactory:
                 f"with the name '{displayName}' will be ignored"
             )
 
-        try:
-            device
-        except NameError:
-            device = None
-
-        return device
+        return device if returnOK is True else None

@@ -29,9 +29,4 @@ class ParameterFactory:
             identifier=identifier, parameterID=param, value=value
         )
 
-        try:
-            parameter
-        except NameError:
-            parameter = None
-
         return parameter

@@ -1,13 +1,13 @@
 """Asynchronous Python client for the local Busch-Jaeger Free@Home API."""
 
 import enum
+from typing import Any
 
 
-# pylint: disable=no-value-for-parameter,line-too-long
 class MyEnumMeta(enum.EnumMeta):
     """EnumMeta."""
 
-    def __contains__(cls, item):
+    def __contains__(cls, item: Any) -> bool:
         """Find for an enum."""
         try:
             cls(item)

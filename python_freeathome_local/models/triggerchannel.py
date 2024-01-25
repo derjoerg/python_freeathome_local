@@ -49,11 +49,11 @@ class TriggerChannel(AbstractChannel):
         parent = super().__str__()
         return f"Trigger-Channel:\n" f"{parent}"
 
-    async def setTimedStartStop(self):
+    async def setTimedStartStop(self):  # type: ignore
         """Trigger the channel."""
         datapoint = self.getInputByPairingID(PairingIDs.AL_TIMED_START_STOP)
-        return await datapoint.setValue(1)
+        return await datapoint.setValue(1)  # type: ignore
 
-    async def press(self):
+    async def press(self):  # type: ignore
         """Trigger the channel."""
-        return await self.setTimedStartStop()
+        return await self.setTimedStartStop()  # type: ignore

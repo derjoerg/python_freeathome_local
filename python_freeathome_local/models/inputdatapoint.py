@@ -31,17 +31,27 @@ class InputDatapoint(AbstractDatapoint):
         parent = super().__str__()
         return f"Input-Datapoint:\n" f"{parent}"
 
-    async def setValue(self, value: int):
+    async def setValue(self, value: int) -> None:  # type: ignore
         """Set Value of current Datapoint and inform SysAp."""
+        """Running mypy over this function I get
+           error: Return type "Coroutine[Any, Any, InputDatapoint]"
+               of "setValue" incompatible with return type "AbstractDatapoint"
+               in supertype "AbstractDatapoint"  [override]
+            I don't know how to solve this
+        """
         super().setValue(value)
-        return (
-            await self.getChannel()
-            .getDevice()
-            .getSysAp()
-            .getApi()
-            .setDatapoint(self)
+        #        return (
+        #            await self.getChannel()
+        #            .getDevice()
+        #            .getSysAp()
+        #            .getApi()
+        #            .setDatapoint(self)
+        #        )
+        await self.getChannel().getDevice().getSysAp().getApi().setDatapoint(
+            self
         )
 
-    def setSpecialValue(self, value: int):
+    def setSpecialValue(self, value: int) -> InputDatapoint:
         """Set Value of current Datapoint without informing SysAp."""
-        return super().setValue(value)
+        super().setValue(value)
+        return self

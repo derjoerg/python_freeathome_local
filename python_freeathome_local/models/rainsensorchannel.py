@@ -49,23 +49,23 @@ class RainSensorChannel(AbstractChannel):
         parent = super().__str__()
         return f"Trigger-Channel:\n" f"{parent}"
 
-    def getRainAlarm(self):
+    def getRainAlarm(self) -> bool:
         """Return RainAlarm."""
         datapoint = self.getOutputByPairingID(PairingIDs.AL_RAIN_ALARM)
         return datapoint.getValue() == "1"
 
-    def getState(self):
+    def getState(self) -> bool:
         """Return RainAlarm."""
         return self.getRainAlarm()
 
-    def getRainSensorActivationPercentage(self):
+    def getRainSensorActivationPercentage(self) -> float:
         """Return RainSensorActivationPercentage."""
         datapoint = self.getOutputByPairingID(
             PairingIDs.AL_RAIN_SENSOR_ACTIVATION_PERCENTAGE
         )
         return float(datapoint.getValue())
 
-    def getRainSensorFrequency(self):
+    def getRainSensorFrequency(self) -> float:
         """Return RainSensorFrequency."""
         datapoint = self.getOutputByPairingID(
             PairingIDs.AL_RAIN_SENSOR_FREQUENCY

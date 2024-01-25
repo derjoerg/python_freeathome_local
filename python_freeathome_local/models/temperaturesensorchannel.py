@@ -49,16 +49,16 @@ class TemperatureSensorChannel(AbstractChannel):
         parent = super().__str__()
         return f"Trigger-Channel:\n" f"{parent}"
 
-    def getOutdoorTemperature(self):
+    def getOutdoorTemperature(self) -> float:
         """Return OutdoorTemperature."""
         datapoint = self.getOutputByPairingID(PairingIDs.AL_OUTDOOR_TEMPERATURE)
         return float(datapoint.getValue())
 
-    def getState(self):
+    def getState(self) -> float:
         """Return OutdoorTemperature."""
         return self.getOutdoorTemperature()
 
-    def getFrostAlarm(self):
+    def getFrostAlarm(self) -> bool:
         """Return FrostAlarm."""
         datapoint = self.getOutputByPairingID(PairingIDs.AL_FROST_ALARM)
         return datapoint.getValue() == "1"

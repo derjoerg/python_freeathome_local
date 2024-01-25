@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from abc import ABC
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from ..pairingids import PairingIDs
 
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class AbstractDatapoint(ABC):
     """Model for an abstract Datapoint."""
 
-    __channel: AbstractChannel | None = None
+    __channel: AbstractChannel
     __identifier: str = ""
     __pairingID: PairingIDs
     __value: str = ""
@@ -42,7 +42,7 @@ class AbstractDatapoint(ABC):
 
         return string
 
-    def getChannel(self):
+    def getChannel(self) -> AbstractChannel:
         """Return Channel of the Datapoint."""
         return self.__channel
 
@@ -50,11 +50,11 @@ class AbstractDatapoint(ABC):
         """Return Identifier of the Datapoint."""
         return self.__identifier
 
-    def getPairingID(self):
+    def getPairingID(self) -> PairingIDs:
         """Return PairingID of the Datapoint."""
         return self.__pairingID
 
-    def setValue(self, value):
+    def setValue(self, value: Any) -> AbstractDatapoint:
         """Set value of the Datapoint."""
         if isinstance(value, bool):
             if value is True:

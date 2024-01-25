@@ -2,7 +2,6 @@
 
 from enum import Enum
 
-# pylint: disable=line-too-long
 # flake8: noqa: E501
 
 

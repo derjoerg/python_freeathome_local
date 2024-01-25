@@ -49,29 +49,29 @@ class MovementDetectorChannel(AbstractChannel):
         parent = super().__str__()
         return f"Trigger-Channel:\n" f"{parent}"
 
-    def getInfoOnOff(self):
+    def getInfoOnOff(self) -> bool:
         """Return InfoOnOff."""
         """This will be only set if the movement detector is e.g. attached """
         """to a switch or light"""
         datapoint = self.getInputByPairingID(PairingIDs.AL_INFO_ON_OFF)
         return datapoint.getValue() == "1"
 
-    def getState(self):
+    def getState(self) -> bool:
         """Return InfoOnOff."""
         return self.getInfoOnOff()
 
-    def getBrightnessLevel(self):
+    def getBrightnessLevel(self) -> float:
         """Return BrightnessLevel."""
         datapoint = self.getOutputByPairingID(PairingIDs.AL_BRIGHTNESS_LEVEL)
         return float(datapoint.getValue())
 
-    def getTimedMovement(self):
+    def getTimedMovement(self) -> bool:
         """Return always True, just when it is triggered it is movement."""
         """A momentary switch, which is triggered if movement is detected."""
         datapoint = self.getOutputByPairingID(PairingIDs.AL_TIMED_MOVEMENT)
         return datapoint.getValue() == "1"
 
-    def getTimedPresence(self):
+    def getTimedPresence(self) -> bool:
         """I don't know."""
         datapoint = self.getOutputByPairingID(PairingIDs.AL_TIMED_PRESENCE)
         return datapoint.getValue() == "1"

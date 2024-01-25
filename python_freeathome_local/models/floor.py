@@ -13,11 +13,11 @@ from .room import Room
 class Floor:
     """Model for a Floor."""
 
-    __id: hex = 0x0
-    __name: str = ""
-    __rooms: {} | None = None
+    __id: int
+    __name: str
+    __rooms: dict[int, Room]
 
-    def __init__(self, id: hex, config: dict[str, Any]):
+    def __init__(self, id: int, config: dict[str, Any]):
         """Initialize a Floor."""
         self.__id = id
         self.__name = ""
@@ -47,11 +47,11 @@ class Floor:
 
         return string
 
-    def getRoomById(self, id: hex) -> Room:
+    def getRoomById(self, id: int) -> Room:
         """Return Room by specific ID."""
         return self.__rooms[id]
 
-    def getId(self) -> hex:
+    def getId(self) -> int:
         """Return Id of a Floor."""
         return self.__id
 

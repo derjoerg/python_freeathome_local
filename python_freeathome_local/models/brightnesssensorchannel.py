@@ -49,16 +49,16 @@ class BrightnessSensorChannel(AbstractChannel):
         parent = super().__str__()
         return f"Trigger-Channel:\n" f"{parent}"
 
-    def getBrightnessLevel(self):
+    def getBrightnessLevel(self) -> float:
         """Return BrightnessLevel."""
         datapoint = self.getOutputByPairingID(PairingIDs.AL_BRIGHTNESS_LEVEL)
         return float(datapoint.getValue())
 
-    def getState(self):
+    def getState(self) -> float:
         """Return BrightnessLevel."""
         return self.getBrightnessLevel()
 
-    def getBrightnessAlarm(self):
+    def getBrightnessAlarm(self) -> bool:
         """Return BrightnessAlarm."""
         datapoint = self.getOutputByPairingID(PairingIDs.AL_BRIGHTNESS_ALARM)
         return datapoint.getValue() == "1"

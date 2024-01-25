@@ -49,11 +49,11 @@ class WindowDoorSensorChannel(AbstractChannel):
         parent = super().__str__()
         return f"Trigger-Channel:\n" f"{parent}"
 
-    def getWindowDoor(self):
+    def getWindowDoor(self) -> bool:
         """Return WindowDoor."""
         datapoint = self.getOutputByPairingID(PairingIDs.AL_WINDOW_DOOR)
         return datapoint.getValue() == "1"
 
-    def getState(self):
+    def getState(self) -> bool:
         """Return WindowDoor."""
         return self.getWindowDoor()

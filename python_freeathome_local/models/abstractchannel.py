@@ -7,7 +7,11 @@ from abc import ABC
 from typing import TYPE_CHECKING, Any
 
 from ..functionids import FunctionIDs
+from ..pairingids import PairingIDs
 from .datapointfactory import DatapointFactory
+from .inputdatapoint import InputDatapoint
+from .outputdatapoint import OutputDatapoint
+from .parameter import Parameter
 from .parameterfactory import ParameterFactory
 
 if TYPE_CHECKING:
@@ -20,15 +24,15 @@ if TYPE_CHECKING:
 class AbstractChannel(ABC):
     """Model for an abstract Channel."""
 
-    _device: AbstractDevice | None = None
+    _device: AbstractDevice
     _identifier: str = ""
     _floor: Floor | None = None
     _room: Room | None = None
     _displayName: str = ""
-    _functionID: FunctionIDs
-    _inputs: {}
-    _outputs: {}
-    _parameters: {}
+    _functionID: FunctionIDs | None = None
+    _inputs: dict[str, InputDatapoint] | None = None
+    _outputs: dict[str, OutputDatapoint] | None = None
+    _parameters: dict[str, Parameter] | None = None
 
     def __init__(
         self,
@@ -57,19 +61,22 @@ class AbstractChannel(ABC):
             parameter = ParameterFactory.create(key, value)
 
             if parameter is not None:
-                self._parameters[key] = parameter
+                if isinstance(parameter, Parameter):
+                    self._parameters[key] = parameter
 
         for key, value in inputs.items():
             datapoint = DatapointFactory.create(self, key, value)
 
             if datapoint is not None:
-                self._inputs[key] = datapoint
+                if isinstance(datapoint, InputDatapoint):
+                    self._inputs[key] = datapoint
 
         for key, value in outputs.items():
             datapoint = DatapointFactory.create(self, key, value)
 
             if datapoint is not None:
-                self._outputs[key] = datapoint
+                if isinstance(datapoint, OutputDatapoint):
+                    self._outputs[key] = datapoint
 
     def __str__(self) -> str:
         """Redefine object-to-string."""
@@ -91,41 +98,44 @@ class AbstractChannel(ABC):
             f"Function  : {self._functionID}"
         )
 
-        string = f"{string}\n" f"Inputs: {len(self._inputs)}\n" f"----------"
+        if isinstance(self._inputs, dict):
+            string = f"{string}\nInputs: {len(self._inputs)}\n----------"
 
-        for key, input in self._inputs.items():
-            value = str(input)
+            for key, input in self._inputs.items():
+                value = str(input)
+                string = (
+                    f"{string}\n"
+                    f"{textwrap.indent(value, '    ')}\n"
+                    f"----------"
+                )
+
+        if isinstance(self._outputs, dict):
+            string = f"{string}\nOutputs: {len(self._outputs)}\n----------"
+
+            for key, output in self._outputs.items():
+                value = str(output)
+                string = (
+                    f"{string}\n"
+                    f"{textwrap.indent(value, '    ')}\n"
+                    f"----------"
+                )
+
+        if isinstance(self._parameters, dict):
             string = (
-                f"{string}\n"
-                f"{textwrap.indent(value, '    ')}\n"
-                f"----------"
+                f"{string}\nParameters: {len(self._parameters)}\n----------"
             )
 
-        string = f"{string}\n" f"Outputs: {len(self._outputs)}\n" f"----------"
-
-        for key, output in self._outputs.items():
-            value = str(output)
-            string = (
-                f"{string}\n"
-                f"{textwrap.indent(value, '    ')}\n"
-                f"----------"
-            )
-
-        string = (
-            f"{string}\n" f"Parameters: {len(self._parameters)}\n" f"----------"
-        )
-
-        for key, parameter in self._parameters.items():
-            value = str(parameter)
-            string = (
-                f"{string}\n"
-                f"{textwrap.indent(value, '    ')}\n"
-                f"----------"
-            )
+            for key, parameter in self._parameters.items():
+                value = str(parameter)
+                string = (
+                    f"{string}\n"
+                    f"{textwrap.indent(value, '    ')}\n"
+                    f"----------"
+                )
 
         return string
 
-    def getDevice(self):
+    def getDevice(self) -> AbstractDevice:
         """Return Device of the Channel."""
         return self._device
 
@@ -137,15 +147,15 @@ class AbstractChannel(ABC):
         """Return DisplayName of the Channel."""
         return self._displayName
 
-    def getFunctionID(self):
+    def getFunctionID(self) -> FunctionIDs | None:
         """Return FunctionID of the Channel."""
         return self._functionID
 
-    def getInputs(self):
+    def getInputs(self) -> dict[str, InputDatapoint] | None:
         """Return all InputDatapoints of the Channel."""
         return self._inputs
 
-    def updateFromDict(self, key, value):
+    def updateFromDict(self, key: str, value: str) -> AbstractDatapoint | None:
         """Return Datapoint object from Free@Home API response.
 
         Args:
@@ -156,30 +166,39 @@ class AbstractChannel(ABC):
         -------
             The updated Datapoint object.
         """
-        if key in self._outputs:
-            datapoint = self._outputs[key].setValue(value)
-            return datapoint
-        elif key in self._inputs:
-            # Very special handling for MovementDetector because
-            # for whatever reason an Input-Datapoint is set through
-            # the websocket instead of an Output-Datapoint ...
-            datapoint = self._inputs[key].setSpecialValue(value)
-            return datapoint
-        else:
-            print(self.getDisplayName(), " - ", key, " : ", value)
+        datapoint = None
 
-    def getOutputByPairingID(self, pairingID) -> AbstractDatapoint:
+        if isinstance(self._outputs, dict):
+            if key in self._outputs:
+                if isinstance(self._outputs[key], OutputDatapoint):
+                    datapoint = self._outputs[key].setValue(value)
+                    return datapoint
+        if isinstance(self._inputs, dict):
+            if key in self._inputs:
+                # Very special handling for MovementDetector because
+                # for whatever reason an Input-Datapoint is set through
+                # the websocket instead of an Output-Datapoint ...
+                if isinstance(self._inputs[key], InputDatapoint):
+                    datapoint = self._inputs[key].setSpecialValue(int(value))
+                    return datapoint
+
+        print(self.getDisplayName(), " - ", key, " : ", value)
+        return datapoint
+
+    def getOutputByPairingID(self, pairingID: PairingIDs) -> AbstractDatapoint:
         """Return OutputDatapoint of a specific PairingID."""
-        for key, value in self._outputs.items():
-            if value.getPairingID() == pairingID:
-                return value
+        if isinstance(self._outputs, dict):
+            for key, value in self._outputs.items():
+                if value.getPairingID() == pairingID:
+                    return value
 
         raise NameError
 
-    def getInputByPairingID(self, pairingID) -> AbstractDatapoint:
+    def getInputByPairingID(self, pairingID: PairingIDs) -> AbstractDatapoint:
         """Return InputDatapoint of a specific PairingID."""
-        for key, value in self._inputs.items():
-            if value.getPairingID() == pairingID:
-                return value
+        if isinstance(self._inputs, dict):
+            for key, value in self._inputs.items():
+                if value.getPairingID() == pairingID:
+                    return value
 
         raise NameError

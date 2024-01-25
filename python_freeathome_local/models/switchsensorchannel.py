@@ -49,11 +49,11 @@ class SwitchSensorChannel(AbstractChannel):
         parent = super().__str__()
         return f"Trigger-Channel:\n" f"{parent}"
 
-    def getSwitchOnOff(self):
+    def getSwitchOnOff(self) -> bool:
         """Return SwitchOnOff."""
         datapoint = self.getOutputByPairingID(PairingIDs.AL_SWITCH_ON_OFF)
         return datapoint.getValue() == "1"
 
-    def getState(self):
+    def getState(self) -> bool:
         """Return SwitchOnOff."""
         return self.getSwitchOnOff()
