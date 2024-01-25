@@ -28,8 +28,8 @@ class AbstractChannel(ABC):
     _identifier: str = ""
     _floor: Floor | None = None
     _room: Room | None = None
-    _displayName: str = ""
-    _functionID: FunctionIDs | None = None
+    _display_name: str = ""
+    _function_id: FunctionIDs | None = None
     _inputs: dict[str, InputDatapoint] | None = None
     _outputs: dict[str, OutputDatapoint] | None = None
     _parameters: dict[str, Parameter] | None = None
@@ -40,8 +40,8 @@ class AbstractChannel(ABC):
         identifier: str,
         floor: Floor | None,
         room: Room | None,
-        displayName: str,
-        functionID: FunctionIDs,
+        display_name: str,
+        function_id: FunctionIDs,
         parameters: dict[str, Any],
         inputs: dict[str, Any],
         outputs: dict[str, Any],
@@ -51,8 +51,8 @@ class AbstractChannel(ABC):
         self._identifier = identifier
         self._floor = floor
         self._room = room
-        self._displayName = displayName
-        self._functionID = functionID
+        self._display_name = display_name
+        self._function_id = function_id
         self._inputs = {}
         self._outputs = {}
         self._parameters = {}
@@ -83,19 +83,19 @@ class AbstractChannel(ABC):
         if self._floor is None:
             floor = "<Not set>"
         else:
-            floor = self._floor.getName()
+            floor = self._floor.get_name()
 
         if self._room is None:
             room = "<Not set>"
         else:
-            room = self._room.getName()
+            room = self._room.get_name()
 
         string = (
             f"Identifier: {self._identifier}\n"
-            f"Name      : {self._displayName}\n"
+            f"Name      : {self._display_name}\n"
             f"Floor     : {floor}\n"
             f"Room      : {room}\n"
-            f"Function  : {self._functionID}"
+            f"Function  : {self._function_id}"
         )
 
         if isinstance(self._inputs, dict):
@@ -135,27 +135,29 @@ class AbstractChannel(ABC):
 
         return string
 
-    def getDevice(self) -> AbstractDevice:
+    def get_device(self) -> AbstractDevice:
         """Return Device of the Channel."""
         return self._device
 
-    def getIdentifier(self) -> str:
+    def get_identifier(self) -> str:
         """Return Identifier of the Channel."""
         return self._identifier
 
-    def getDisplayName(self) -> str:
+    def get_display_name(self) -> str:
         """Return DisplayName of the Channel."""
-        return self._displayName
+        return self._display_name
 
-    def getFunctionID(self) -> FunctionIDs | None:
+    def get_function_id(self) -> FunctionIDs | None:
         """Return FunctionID of the Channel."""
-        return self._functionID
+        return self._function_id
 
-    def getInputs(self) -> dict[str, InputDatapoint] | None:
+    def get_inputs(self) -> dict[str, InputDatapoint] | None:
         """Return all InputDatapoints of the Channel."""
         return self._inputs
 
-    def updateFromDict(self, key: str, value: str) -> AbstractDatapoint | None:
+    def update_from_dict(
+        self, key: str, value: str
+    ) -> AbstractDatapoint | None:
         """Return Datapoint object from Free@Home API response.
 
         Args:
@@ -171,7 +173,7 @@ class AbstractChannel(ABC):
         if isinstance(self._outputs, dict):
             if key in self._outputs:
                 if isinstance(self._outputs[key], OutputDatapoint):
-                    datapoint = self._outputs[key].setValue(value)
+                    datapoint = self._outputs[key].set_value(value)
                     return datapoint
         if isinstance(self._inputs, dict):
             if key in self._inputs:
@@ -179,26 +181,30 @@ class AbstractChannel(ABC):
                 # for whatever reason an Input-Datapoint is set through
                 # the websocket instead of an Output-Datapoint ...
                 if isinstance(self._inputs[key], InputDatapoint):
-                    datapoint = self._inputs[key].setSpecialValue(int(value))
+                    datapoint = self._inputs[key].set_special_value(int(value))
                     return datapoint
 
-        print(self.getDisplayName(), " - ", key, " : ", value)
+        print(self.get_display_name(), " - ", key, " : ", value)
         return datapoint
 
-    def getOutputByPairingID(self, pairingID: PairingIDs) -> AbstractDatapoint:
+    def get_output_by_pairing_id(
+        self, pairing_id: PairingIDs
+    ) -> AbstractDatapoint:
         """Return OutputDatapoint of a specific PairingID."""
         if isinstance(self._outputs, dict):
             for key, value in self._outputs.items():
-                if value.getPairingID() == pairingID:
+                if value.get_pairing_id() == pairing_id:
                     return value
 
         raise NameError
 
-    def getInputByPairingID(self, pairingID: PairingIDs) -> AbstractDatapoint:
+    def get_input_by_pairing_id(
+        self, pairing_id: PairingIDs
+    ) -> AbstractDatapoint:
         """Return InputDatapoint of a specific PairingID."""
         if isinstance(self._inputs, dict):
             for key, value in self._inputs.items():
-                if value.getPairingID() == pairingID:
+                if value.get_pairing_id() == pairing_id:
                     return value
 
         raise NameError

@@ -32,35 +32,33 @@ class ChannelFactory:
     ) -> AbstractChannel | None:
         """Create a specific channel object based on provided config."""
         device = device
-        origFloor = ""
-        origRoom = ""
-        # floor = Floor
-        # room = ""
-        displayName = ""
-        functionID = 0x0
+        orig_floor = ""
+        orig_room = ""
+        display_name = ""
+        function_id = 0x0
         parameters = {}
         inputs = {}
         outputs = {}
         channel = None
 
         if "floor" in config:
-            origFloor = config["floor"]
+            orig_floor = config["floor"]
 
-            if origFloor != "":
+            if orig_floor != "":
                 floor = (
-                    device.getSysAp()
-                    .getFloorplan()
-                    .getFloorById(int(origFloor, 16))
+                    device.get_sys_ap()
+                    .get_floorplan()
+                    .get_floor_by_id(int(orig_floor, 16))
                 )
 
         if "room" in config:
-            origRoom = config["room"]
+            orig_room = config["room"]
 
-            if origRoom != "" and isinstance(floor, Floor):
-                room = floor.getRoomById(int(origRoom, 16))
+            if orig_room != "" and isinstance(floor, Floor):
+                room = floor.get_room_by_id(int(orig_room, 16))
 
         if "displayName" in config:
-            displayName = config["displayName"]
+            display_name = config["displayName"]
 
         if "parameters" in config:
             parameters = config["parameters"]
@@ -72,12 +70,12 @@ class ChannelFactory:
             outputs = config["outputs"]
 
         if "functionID" in config and config["functionID"] != "":
-            functionID = int(config["functionID"], 16)
-            print(f"\t{functionID} - {FunctionIDs(functionID).name}")
+            function_id = int(config["functionID"], 16)
+            print(f"\t{function_id} - {FunctionIDs(function_id).name}")
 
-            if functionID in FunctionIDs:
-                className = (
-                    FunctionIDs(functionID)
+            if function_id in FunctionIDs:
+                class_name = (
+                    FunctionIDs(function_id)
                     .name.removeprefix("FID_")
                     .title()
                     .replace("_", "")
@@ -85,13 +83,13 @@ class ChannelFactory:
                 )
 
                 try:
-                    channel = globals()[className](
+                    channel = globals()[class_name](
                         device=device,
                         identifier=identifier,
                         floor=floor if "floor" in locals() else None,
                         room=room if "room" in locals() else None,
-                        displayName=displayName,
-                        functionID=FunctionIDs(functionID),
+                        display_name=display_name,
+                        function_id=FunctionIDs(function_id),
                         parameters=parameters,
                         inputs=inputs,
                         outputs=outputs,
@@ -99,7 +97,7 @@ class ChannelFactory:
                     print("\t\tok")
                 except KeyError:
                     # channel = None
-                    print(f"\t\t{className} not defined")
+                    print(f"\t\t{class_name} not defined")
 
         if isinstance(channel, AbstractChannel):
             return channel

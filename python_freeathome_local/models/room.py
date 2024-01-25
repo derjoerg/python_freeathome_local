@@ -25,10 +25,10 @@ class Room:
         """Redefine object-to-string."""
         return f"{self.__id} - {self.__name}"
 
-    def getId(self) -> int:
+    def get_id(self) -> int:
         """Return Id of Room."""
         return self.__id
 
-    def getName(self) -> str:
+    def get_name(self) -> str:
         """Return Name of Room."""
         return self.__name

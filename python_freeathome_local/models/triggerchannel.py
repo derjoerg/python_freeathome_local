@@ -25,8 +25,8 @@ class TriggerChannel(AbstractChannel):
         identifier: str,
         floor: Floor,
         room: Room,
-        displayName: str,
-        functionID: FunctionIDs,
+        display_name: str,
+        function_id: FunctionIDs,
         parameters: dict[str, Any],
         inputs: dict[str, Any],
         outputs: dict[str, Any],
@@ -37,8 +37,8 @@ class TriggerChannel(AbstractChannel):
             identifier,
             floor,
             room,
-            displayName,
-            functionID,
+            display_name,
+            function_id,
             parameters,
             inputs,
             outputs,
@@ -49,11 +49,11 @@ class TriggerChannel(AbstractChannel):
         parent = super().__str__()
         return f"Trigger-Channel:\n" f"{parent}"
 
-    async def setTimedStartStop(self):  # type: ignore
+    async def set_timed_start_stop(self):  # type: ignore
         """Trigger the channel."""
-        datapoint = self.getInputByPairingID(PairingIDs.AL_TIMED_START_STOP)
-        return await datapoint.setValue(1)  # type: ignore
+        datapoint = self.get_input_by_pairing_id(PairingIDs.AL_TIMED_START_STOP)
+        return await datapoint.set_value(1)  # type: ignore
 
     async def press(self):  # type: ignore
         """Trigger the channel."""
-        return await self.setTimedStartStop()  # type: ignore
+        return await self.set_timed_start_stop()  # type: ignore

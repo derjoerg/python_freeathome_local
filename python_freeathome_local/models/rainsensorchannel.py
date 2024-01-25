@@ -25,8 +25,8 @@ class RainSensorChannel(AbstractChannel):
         identifier: str,
         floor: Floor,
         room: Room,
-        displayName: str,
-        functionID: FunctionIDs,
+        display_name: str,
+        function_id: FunctionIDs,
         parameters: dict[str, Any],
         inputs: dict[str, Any],
         outputs: dict[str, Any],
@@ -37,8 +37,8 @@ class RainSensorChannel(AbstractChannel):
             identifier,
             floor,
             room,
-            displayName,
-            functionID,
+            display_name,
+            function_id,
             parameters,
             inputs,
             outputs,
@@ -49,25 +49,25 @@ class RainSensorChannel(AbstractChannel):
         parent = super().__str__()
         return f"Trigger-Channel:\n" f"{parent}"
 
-    def getRainAlarm(self) -> bool:
+    def get_rain_alarm(self) -> bool:
         """Return RainAlarm."""
-        datapoint = self.getOutputByPairingID(PairingIDs.AL_RAIN_ALARM)
-        return datapoint.getValue() == "1"
+        datapoint = self.get_output_by_pairing_id(PairingIDs.AL_RAIN_ALARM)
+        return datapoint.get_value() == "1"
 
-    def getState(self) -> bool:
+    def get_state(self) -> bool:
         """Return RainAlarm."""
-        return self.getRainAlarm()
+        return self.get_rain_alarm()
 
-    def getRainSensorActivationPercentage(self) -> float:
+    def get_rain_sensor_activation_percentage(self) -> float:
         """Return RainSensorActivationPercentage."""
-        datapoint = self.getOutputByPairingID(
+        datapoint = self.get_output_by_pairing_id(
             PairingIDs.AL_RAIN_SENSOR_ACTIVATION_PERCENTAGE
         )
-        return float(datapoint.getValue())
+        return float(datapoint.get_value())
 
-    def getRainSensorFrequency(self) -> float:
+    def get_rain_sensor_frequency(self) -> float:
         """Return RainSensorFrequency."""
-        datapoint = self.getOutputByPairingID(
+        datapoint = self.get_output_by_pairing_id(
             PairingIDs.AL_RAIN_SENSOR_FREQUENCY
         )
-        return float(datapoint.getValue())
+        return float(datapoint.get_value())

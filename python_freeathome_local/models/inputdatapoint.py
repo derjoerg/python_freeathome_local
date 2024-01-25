@@ -20,18 +20,18 @@ class InputDatapoint(AbstractDatapoint):
         self,
         channel: AbstractChannel,
         identifier: str,
-        pairingID: PairingIDs,
+        pairing_id: PairingIDs,
         value: str,
     ):
         """Initialize a Inputdatapoint."""
-        super().__init__(channel, identifier, pairingID, value)
+        super().__init__(channel, identifier, pairing_id, value)
 
     def __str__(self) -> str:
         """Redefine object-to-string."""
         parent = super().__str__()
         return f"Input-Datapoint:\n" f"{parent}"
 
-    async def setValue(self, value: int) -> None:  # type: ignore
+    async def set_value(self, value: int) -> None:  # type: ignore
         """Set Value of current Datapoint and inform SysAp."""
         """Running mypy over this function I get
            error: Return type "Coroutine[Any, Any, InputDatapoint]"
@@ -39,19 +39,19 @@ class InputDatapoint(AbstractDatapoint):
                in supertype "AbstractDatapoint"  [override]
             I don't know how to solve this
         """
-        super().setValue(value)
+        super().set_value(value)
         #        return (
-        #            await self.getChannel()
-        #            .getDevice()
-        #            .getSysAp()
-        #            .getApi()
-        #            .setDatapoint(self)
+        #            await self.get_channel()
+        #            .get_device()
+        #            .get_sys_ap()
+        #            .get_api()
+        #            .set_datapoint(self)
         #        )
-        await self.getChannel().getDevice().getSysAp().getApi().setDatapoint(
+        await self.get_channel().get_device().get_sys_ap().get_api().set_datapoint(
             self
         )
 
-    def setSpecialValue(self, value: int) -> InputDatapoint:
+    def set_special_value(self, value: int) -> InputDatapoint:
         """Set Value of current Datapoint without informing SysAp."""
-        super().setValue(value)
+        super().set_value(value)
         return self

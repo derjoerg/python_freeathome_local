@@ -22,44 +22,44 @@ class SysAp:
 
     __api: FreeAtHome
     __id: UUID
-    __connectionState: str
+    __connection_state: str
     __name: str
-    __uartSerialNumber: str
+    __uart_serial_number: str
     __version: str
     __devices: dict[str, AbstractDevice]
     __floorplan: Floorplan
 
     @classmethod
-    def fromApi(
+    def from_api(
         cls,
         api: FreeAtHome,
         id: str,
         config: dict[str, Any],
-        sysApOnly: bool = True,
+        sys_ap_only: bool = True,
     ) -> Self:
         """Initialize a SysAp device from the API."""
         try:
-            correctId = UUID(str(id))
+            correct_id = UUID(str(id))
         except ValueError:
             msg = f"The provided id '{id}' is malformed."
             raise FreeAtHomeError(msg)
 
         if "connectionState" in config:
-            connState = config["connectionState"]
+            conn_state = config["connectionState"]
         else:
             msg = "connectionState is not defined"
             raise FreeAtHomeError(msg)
 
-        sysapName = ""
+        sysap_name = ""
 
         if "sysapName" in config:
-            sysapName = config["sysapName"]
+            sysap_name = config["sysapName"]
 
         if "sysap" in config:
-            uartSerialNumber = ""
+            uart_serial_number = ""
 
             if "uartSerialNumber" in config["sysap"]:
-                uartSerialNumber = config["sysap"]["uartSerialNumber"]
+                uart_serial_number = config["sysap"]["uartSerialNumber"]
 
             version = ""
 
@@ -70,31 +70,31 @@ class SysAp:
             msg = "SysapSection missing"
             raise FreeAtHomeError(msg)
 
-        sysAp = cls(
+        sys_ap = cls(
             api=api,
-            id=correctId,
-            connectionState=connState,
-            name=sysapName,
-            uartSerialNumber=uartSerialNumber,
+            id=correct_id,
+            connection_state=conn_state,
+            name=sysap_name,
+            uart_serial_number=uart_serial_number,
             version=version,
         )
 
-        if sysApOnly is False:
+        if sys_ap_only is False:
             if "floorplan" in config:
                 for key, value in config["floorplan"].items():
-                    sysAp.__floorplan = Floorplan(value)
+                    sys_ap.__floorplan = Floorplan(value)
 
             if "devices" in config:
                 for key, value in config["devices"].items():
-                    device = DeviceFactory.create(sysAp, key, value)
+                    device = DeviceFactory.create(sys_ap, key, value)
 
                     if device is not None:
-                        sysAp.setDevice(key, device)
+                        sys_ap.set_device(key, device)
         #                        sysAp.__devices[key] = device
 
-        return sysAp
+        return sys_ap
 
-    def updateFromDict(self, data: dict[str, Any]) -> list:
+    def update_from_dict(self, data: dict[str, Any]) -> list:
         """Return list of updated datapoints from Free@Home API response.
 
         Args:
@@ -113,18 +113,18 @@ class SysAp:
                 # print(key, " has the value ", value)
 
                 if splitted[0] in self.__devices:
-                    datapoint = self.__devices[splitted[0]].updateFromDict(
+                    datapoint = self.__devices[splitted[0]].update_from_dict(
                         splitted[1], value
                     )
 
                     if datapoint is not None:
                         datapoints.append(datapoint)
                         # print(
-                        #     datapoint.getChannel().getDisplayName(),
+                        #     datapoint.get_channel().get_display_name(),
                         #     " - ",
-                        #     datapoint.getPairingID().name,
+                        #     datapoint.get_pairing_id().name,
                         #     " : ",
-                        #     datapoint.getValue()
+                        #     datapoint.get_value()
                         # )
 
                 # else:
@@ -137,8 +137,8 @@ class SysAp:
         string = (
             f"Name      : {self.__name}\n"
             f"Id        : {self.__id}\n"
-            f"State     : {self.__connectionState}\n"
-            f"uartSerial: {self.__uartSerialNumber}\n"
+            f"State     : {self.__connection_state}\n"
+            f"uartSerial: {self.__uart_serial_number}\n"
             f"Version   : {self.__version}\n"
             f"Devices   : {len(self.__devices)}"
         )
@@ -160,9 +160,9 @@ class SysAp:
         self,
         api: FreeAtHome,
         id: UUID,
-        connectionState: str,
+        connection_state: str,
         name: str,
-        uartSerialNumber: str,
+        uart_serial_number: str,
         version: str,
     ) -> None:
         """Initialize a SysAp device class.
@@ -178,28 +178,28 @@ class SysAp:
         """
         self.__api = api
         self.__id = id
-        self.__connectionState = connectionState
+        self.__connection_state = connection_state
         self.__name = name
-        self.__uartSerialNumber = uartSerialNumber
+        self.__uart_serial_number = uart_serial_number
         self.__version = version
         self.__devices = {}
 
-    def getApi(self) -> FreeAtHome:
+    def get_api(self) -> FreeAtHome:
         """Return API."""
         return self.__api
 
-    def getId(self) -> UUID:
+    def get_id(self) -> UUID:
         """Return Id of SysAp."""
         return self.__id
 
-    def getFloorplan(self) -> Floorplan:
+    def get_floorplan(self) -> Floorplan:
         """Return Floorplan."""
         return self.__floorplan
 
-    def getDeviceById(self, id: str) -> AbstractDevice:
+    def get_device_by_id(self, id: str) -> AbstractDevice:
         """Return specific Device by ID."""
         return self.__devices[id]
 
-    def setDevice(self, key: str, device: AbstractDevice) -> None:
+    def set_device(self, key: str, device: AbstractDevice) -> None:
         """Set specific Device."""
         self.__devices[key] = device

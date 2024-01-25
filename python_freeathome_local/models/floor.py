@@ -28,10 +28,10 @@ class Floor:
 
         if "rooms" in config:
             for key, value in config["rooms"].items():
-                roomId = int(key, 16)
-                room = Room(roomId, value)
+                room_id = int(key, 16)
+                room = Room(room_id, value)
 
-                self.__rooms[roomId] = room
+                self.__rooms[room_id] = room
 
     def __str__(self) -> str:
         """Redefine object-to-string."""
@@ -47,14 +47,14 @@ class Floor:
 
         return string
 
-    def getRoomById(self, id: int) -> Room:
+    def get_room_by_id(self, id: int) -> Room:
         """Return Room by specific ID."""
         return self.__rooms[id]
 
-    def getId(self) -> int:
+    def get_id(self) -> int:
         """Return Id of a Floor."""
         return self.__id
 
-    def getName(self) -> str:
+    def get_name(self) -> str:
         """Return Name of a Floor."""
         return self.__name

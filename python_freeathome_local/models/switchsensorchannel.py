@@ -25,8 +25,8 @@ class SwitchSensorChannel(AbstractChannel):
         identifier: str,
         floor: Floor,
         room: Room,
-        displayName: str,
-        functionID: FunctionIDs,
+        display_name: str,
+        function_id: FunctionIDs,
         parameters: dict[str, Any],
         inputs: dict[str, Any],
         outputs: dict[str, Any],
@@ -37,8 +37,8 @@ class SwitchSensorChannel(AbstractChannel):
             identifier,
             floor,
             room,
-            displayName,
-            functionID,
+            display_name,
+            function_id,
             parameters,
             inputs,
             outputs,
@@ -49,11 +49,11 @@ class SwitchSensorChannel(AbstractChannel):
         parent = super().__str__()
         return f"Trigger-Channel:\n" f"{parent}"
 
-    def getSwitchOnOff(self) -> bool:
+    def get_switch_on_off(self) -> bool:
         """Return SwitchOnOff."""
-        datapoint = self.getOutputByPairingID(PairingIDs.AL_SWITCH_ON_OFF)
-        return datapoint.getValue() == "1"
+        datapoint = self.get_output_by_pairing_id(PairingIDs.AL_SWITCH_ON_OFF)
+        return datapoint.get_value() == "1"
 
-    def getState(self) -> bool:
+    def get_state(self) -> bool:
         """Return SwitchOnOff."""
-        return self.getSwitchOnOff()
+        return self.get_switch_on_off()

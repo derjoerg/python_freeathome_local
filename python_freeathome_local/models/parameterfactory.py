@@ -19,14 +19,14 @@ class ParameterFactory:
     @classmethod
     def create(cls, identifier: str, value: str) -> AbstractParameter:
         """Create a specific parameter object based on provided config."""
-        parameterID = int(identifier[3:], 16)
+        parameter_id = int(identifier[3:], 16)
 
         for param in ParameterIDs:
-            if parameterID == param.value:
+            if parameter_id == param.value:
                 break
 
         parameter = Parameter(
-            identifier=identifier, parameterID=param, value=value
+            identifier=identifier, parameter_id=param, value=value
         )
 
         return parameter

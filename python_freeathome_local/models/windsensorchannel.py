@@ -25,8 +25,8 @@ class WindSensorChannel(AbstractChannel):
         identifier: str,
         floor: Floor,
         room: Room,
-        displayName: str,
-        functionID: FunctionIDs,
+        display_name: str,
+        function_id: FunctionIDs,
         parameters: dict[str, Any],
         inputs: dict[str, Any],
         outputs: dict[str, Any],
@@ -37,8 +37,8 @@ class WindSensorChannel(AbstractChannel):
             identifier,
             floor,
             room,
-            displayName,
-            functionID,
+            display_name,
+            function_id,
             parameters,
             inputs,
             outputs,
@@ -49,21 +49,21 @@ class WindSensorChannel(AbstractChannel):
         parent = super().__str__()
         return f"Trigger-Channel:\n" f"{parent}"
 
-    def getWindSpeed(self) -> float:
+    def get_wind_speed(self) -> float:
         """Return WindSpeed."""
-        datapoint = self.getOutputByPairingID(PairingIDs.AL_WIND_SPEED)
-        return float(datapoint.getValue())
+        datapoint = self.get_output_by_pairing_id(PairingIDs.AL_WIND_SPEED)
+        return float(datapoint.get_value())
 
-    def getState(self) -> float:
+    def get_state(self) -> float:
         """Return WindSpeed."""
-        return self.getWindSpeed()
+        return self.get_wind_speed()
 
-    def getWindAlarm(self) -> bool:
+    def get_wind_alarm(self) -> bool:
         """Return WindAlarm."""
-        datapoint = self.getOutputByPairingID(PairingIDs.AL_WIND_ALARM)
-        return datapoint.getValue() == "1"
+        datapoint = self.get_output_by_pairing_id(PairingIDs.AL_WIND_ALARM)
+        return datapoint.get_value() == "1"
 
-    def getWindForce(self) -> int:
+    def get_wind_force(self) -> int:
         """Return WindForce."""
-        datapoint = self.getOutputByPairingID(PairingIDs.AL_WIND_FORCE)
-        return int(datapoint.getValue())
+        datapoint = self.get_output_by_pairing_id(PairingIDs.AL_WIND_FORCE)
+        return int(datapoint.get_value())

@@ -15,6 +15,6 @@ if TYPE_CHECKING:
 class Parameter(AbstractParameter):
     """Model for a Parameter."""
 
-    def __init__(self, identifier: str, parameterID: ParameterIDs, value: str):
+    def __init__(self, identifier: str, parameter_id: ParameterIDs, value: str):
         """Initialize a Parameter."""
-        super().__init__(identifier, parameterID, value)
+        super().__init__(identifier, parameter_id, value)

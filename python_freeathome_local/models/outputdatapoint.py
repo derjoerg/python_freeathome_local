@@ -20,11 +20,11 @@ class OutputDatapoint(AbstractDatapoint):
         self,
         channel: AbstractChannel,
         identifier: str,
-        pairingID: PairingIDs,
+        pairing_id: PairingIDs,
         value: str,
     ):
         """Initialize an OutputDatapoint."""
-        super().__init__(channel, identifier, pairingID, value)
+        super().__init__(channel, identifier, pairing_id, value)
 
     def __str__(self) -> str:
         """Redefine object-to-string."""

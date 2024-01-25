@@ -21,38 +21,38 @@ if TYPE_CHECKING:
 class AbstractDevice(ABC):
     """Model for an abstract Device."""
 
-    __sysAp: SysAp
-    __serialNumber: str = ""
+    __sys_ap: SysAp
+    __serial_number: str = ""
     __floor: Floor | None = None
     __room: Room | None = None
-    __displayName: str = ""
+    __display_name: str = ""
     __unresponsive: bool = False
-    __unresponsiveCounter: int = 0
+    __unresponsive_counter: int = 0
     __defect: bool = False
     __channels: dict[str, AbstractChannel]
     __parameters: dict[str, AbstractParameter]
 
     def __init__(
         self,
-        sysAp: SysAp,
-        serialNumber: str,
+        sys_ap: SysAp,
+        serial_number: str,
         floor: Floor | None,
         room: Room | None,
-        displayName: str,
+        display_name: str,
         unresponsive: bool,
-        unresponsiveCounter: int,
+        unresponsive_counter: int,
         defect: bool,
         channels: dict[str, Any],
         parameters: dict[str, Any],
     ):
         """Initialize an AbstractDevice."""
-        self.__sysAp = sysAp
-        self.__serialNumber = serialNumber
+        self.__sys_ap = sys_ap
+        self.__serial_number = serial_number
         self.__floor = floor
         self.__room = room
-        self.__displayName = displayName
+        self.__display_name = display_name
         self.__unresponsive = unresponsive
-        self.__unresponsiveCounter = unresponsiveCounter
+        self.__unresponsive_counter = unresponsive_counter
         self.__defect = defect
         self.__channels = {}
         self.__parameters = {}
@@ -72,8 +72,8 @@ class AbstractDevice(ABC):
     def __str__(self) -> str:
         """Redefine object-to-string."""
         string = (
-            f"Serial  : {self.__serialNumber}\n"
-            f"Name    : {self.__displayName}\n"
+            f"Serial  : {self.__serial_number}\n"
+            f"Name    : {self.__display_name}\n"
             f"Floor   : {self.__floor}\n"
             f"Room    : {self.__room}\n"
             f"Channels: {len(self.__channels)}"
@@ -95,27 +95,29 @@ class AbstractDevice(ABC):
 
         return string
 
-    def getSysAp(self) -> SysAp:
+    def get_sys_ap(self) -> SysAp:
         """Return SysAp of the Device."""
-        return self.__sysAp
+        return self.__sys_ap
 
-    def getSerialNumber(self) -> str:
+    def get_serial_number(self) -> str:
         """Return SerialNumber of the Device."""
-        return self.__serialNumber
+        return self.__serial_number
 
-    def getChannels(self) -> dict:
+    def get_channels(self) -> dict:
         """Return all Channels of the Device."""
         return self.__channels
 
-    def getChannelById(self, id: str) -> AbstractChannel:
+    def get_channel_by_id(self, id: str) -> AbstractChannel:
         """Return specific Channel of the Device."""
         return self.__channels[id]
 
-    def getDisplayName(self) -> str:
+    def get_display_name(self) -> str:
         """Return DisplayName of the Device."""
-        return self.__displayName
+        return self.__display_name
 
-    def updateFromDict(self, key: str, value: str) -> AbstractDatapoint | None:
+    def update_from_dict(
+        self, key: str, value: str
+    ) -> AbstractDatapoint | None:
         """Return Channel object from Free@Home API response.
 
         Args:
@@ -130,7 +132,7 @@ class AbstractDevice(ABC):
         splitted = key.split("/")
 
         if splitted[0] in self.__channels:
-            datapoint = self.__channels[splitted[0]].updateFromDict(
+            datapoint = self.__channels[splitted[0]].update_from_dict(
                 splitted[1], value
             )
 

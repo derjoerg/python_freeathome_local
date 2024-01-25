@@ -15,67 +15,161 @@ async def main() -> None:
         password=password,
     ) as freeathome:
         await freeathome.connect()
-        sysAp = await freeathome.loadSysAp(False)
+        sys_ap = await freeathome.load_sys_ap(False)
 
         if freeathome.connected:
             print("connected")
-            # SysAp
-            print(sysAp)
+            # sys_ap
+            print(sys_ap)
             # Weatherstation
-            # print(sysAp.getDeviceById("7EB1000021C5"))
+            # print(
+            #     sys_ap
+            #         .get_device_by_id("7EB1000021C5")
+            # )
             # BrightnessSensor
-            # print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0000").getState())
-            # print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0000").getBrightnessAlarm())
+            # print(
+            #     sys_ap
+            #         .get_device_by_id("7EB1000021C5")
+            #         .get_channel_by_id("ch0000")
+            #         .get_state()
+            # )
+            # print(
+            #     sys_ap
+            #         .get_device_by_id("7EB1000021C5")
+            #         .get_channel_by_id("ch0000")
+            #         .get_brightness_alarm()
+            # )
             # TemperatureSensor
-            # print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0002").getState())
-            # print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0002").getFrostAlarm())
+            # print(
+            #     sys_ap
+            #         .get_device_by_id("7EB1000021C5")
+            #         .get_channel_by_id("ch0002")
+            #         .get_state()
+            # )
+            # print(
+            #     sys_ap
+            #         .get_device_by_id("7EB1000021C5")
+            #         .get_channel_by_id("ch0002")
+            #         .get_frost_alarm()
+            # )
             # WindSensor
-            # print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0003").getState())
-            # print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0003").getWindAlarm())
-            # print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0003").getWindForce())
+            # print(
+            #      sys_ap
+            #         .get_device_by_id("7EB1000021C5")
+            #         .get_channel_by_id("ch0003")
+            #         .get_state()
+            # )
+            # print(
+            #     sys_ap
+            #         .get_device_by_id("7EB1000021C5")
+            #         .get_channel_by_id("ch0003")
+            #         .get_wind_alarm()
+            # )
+            # print(
+            #     sys_ap
+            #         .get_device_by_id("7EB1000021C5")
+            #         .get_channel_by_id("ch0003")
+            #         .get_wind_force()
+            # )
             # RainSensor
-            # print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0001").getState())
-            # print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0001").getRainSensorActivationPercentage())
-            # print(sysAp.getDeviceById("7EB1000021C5").getChannelById("ch0001").getRainSensorFrequency())
+            # print(
+            #     sys_ap
+            #         .get_device_by_id("7EB1000021C5")
+            #         .get_channel_by_id("ch0001")
+            #         .get_state()
+            # )
+            # print(
+            #     sys_ap
+            #         .get_device_by_id("7EB1000021C5")
+            #         .get_channel_by_id("ch0001")
+            #         .get_rain_sensor_activation_percentage()
+            # )
+            # print(
+            #     sys_ap
+            #         .get_device_by_id("7EB1000021C5")
+            #         .get_channel_by_id("ch0001")
+            #         .get_rain_sensor_frequency()
+            # )
             # WindowDoorSensor
-            # print(sysAp.getDeviceById("ABB28CBC3651").getChannelById("ch0002").getState())
+            # print(
+            #     sys_ap
+            #         .get_device_by_id("ABB28CBC3651")
+            #         .get_channel_by_id("ch0002")
+            #         .get_state()
+            # )
             # MovementDetector
-            # print(sysAp.getDeviceById("ABB700DA100B").getChannelById("ch0000"))
-            # print(sysAp.getDeviceById("ABB700DA100B").getChannelById("ch0000").getBrightnessLevel())
-            # print(sysAp.getDeviceById("ABB700DA100B").getChannelById("ch0000").getState())
+            # print(
+            #     sys_ap
+            #         .get_device_by_id("ABB700DA100B")
+            #         .get_channel_by_id("ch0000")
+            # )
+            # print(
+            #     sys_ap
+            #         .get_device_by_id("ABB700DA100B")
+            #         .get_channel_by_id("ch0000")
+            #         .get_brightness_level()
+            # )
+            # print(
+            #     sys_ap
+            #         .get_device_by_id("ABB700DA100B")
+            #         .get_channel_by_id("ch0000")
+            #         .get_state()
+            # )
             # SwitchSensor
-            # print(sysAp.getDeviceById("ABB700D9C0A4").getChannelById("ch0000"))
-            # print(sysAp.getDeviceById("ABB700D9C0A4").getChannelById("ch0000").getState())
+            # print(
+            #     sys_ap
+            #         .get_device_by_id("ABB700D9C0A4")
+            #         .get_channel_by_id("ch0000")
+            # )
+            # print(
+            #     sys_ap
+            #         .get_device_by_id("ABB700D9C0A4")
+            #         .get_channel_by_id("ch0000")
+            #         .get_state()
+            # )
 
             # Trigger
-            # result = await sysAp.getDeviceById("ABB28EBC3651").getChannelById("ch0012").press()
+            # result = await sys_ap
+            #     .get_device_by_id("ABB28EBC3651")
+            #     .get_channel_by_id("ch0012")
+            # .press()
             # SwitchActuator
-            # result = await sysAp.getDeviceById("ABB242AD3651").getChannelById("ch0003").turnOn()
-            # result = await sysAp.getDeviceById("ABB242AD3651").getChannelById("ch0003").turnOff()
+            # result = (
+            #     await sys_ap.get_device_by_id("ABB242AD3651")
+            #     .get_channel_by_id("ch0003")
+            #     .turn_on()
+            # )
+            # result = (
+            #     await sys_ap.get_device_by_id("ABB242AD3651")
+            #     .get_channel_by_id("ch0003")
+            #     .turn_off()
+            # )
 
-        def somethingUpdated(datapoints) -> None:
-            """Call when SysAp reports a change."""
-            print("\tReceived an update from SysAp")
+        def something_updated(datapoints) -> None:
+            """Call when sys_ap reports a change."""
+            print("\tReceived an update from sys_ap")
 
             for datapoint in datapoints:
                 print(
-                    datapoint.getChannel().getDevice().getSerialNumber(),
+                    datapoint.get_channel().get_device().get_serial_number(),
                     "(",
-                    datapoint.getChannel().getDevice().getDisplayName(),
+                    datapoint.get_channel().get_device().get_display_name(),
                     ")",
                     " - ",
-                    datapoint.getChannel().getIdentifier(),
+                    datapoint.get_channel().get_identifier(),
                     "(",
-                    datapoint.getChannel().getDisplayName(),
+                    datapoint.get_channel().get_display_name(),
                     ")",
                     " - ",
-                    datapoint.getPairingID().name,
+                    datapoint.get_pairing_id().name,
                     " : ",
-                    datapoint.getValue(),
+                    datapoint.get_value(),
                 )
 
         # Start listening
-        task = asyncio.create_task(freeathome.listen(callback=somethingUpdated))
+        task = asyncio.create_task(
+            freeathome.listen(callback=something_updated)
+        )
 
         # Now we stream for 10 seconds
         await asyncio.sleep(10)

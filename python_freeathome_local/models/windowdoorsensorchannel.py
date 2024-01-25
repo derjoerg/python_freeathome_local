@@ -25,8 +25,8 @@ class WindowDoorSensorChannel(AbstractChannel):
         identifier: str,
         floor: Floor,
         room: Room,
-        displayName: str,
-        functionID: FunctionIDs,
+        display_name: str,
+        function_id: FunctionIDs,
         parameters: dict[str, Any],
         inputs: dict[str, Any],
         outputs: dict[str, Any],
@@ -37,8 +37,8 @@ class WindowDoorSensorChannel(AbstractChannel):
             identifier,
             floor,
             room,
-            displayName,
-            functionID,
+            display_name,
+            function_id,
             parameters,
             inputs,
             outputs,
@@ -49,11 +49,11 @@ class WindowDoorSensorChannel(AbstractChannel):
         parent = super().__str__()
         return f"Trigger-Channel:\n" f"{parent}"
 
-    def getWindowDoor(self) -> bool:
+    def get_window_door(self) -> bool:
         """Return WindowDoor."""
-        datapoint = self.getOutputByPairingID(PairingIDs.AL_WINDOW_DOOR)
-        return datapoint.getValue() == "1"
+        datapoint = self.get_output_by_pairing_id(PairingIDs.AL_WINDOW_DOOR)
+        return datapoint.get_value() == "1"
 
-    def getState(self) -> bool:
+    def get_state(self) -> bool:
         """Return WindowDoor."""
-        return self.getWindowDoor()
+        return self.get_window_door()

@@ -25,8 +25,8 @@ class TemperatureSensorChannel(AbstractChannel):
         identifier: str,
         floor: Floor,
         room: Room,
-        displayName: str,
-        functionID: FunctionIDs,
+        display_name: str,
+        function_id: FunctionIDs,
         parameters: dict[str, Any],
         inputs: dict[str, Any],
         outputs: dict[str, Any],
@@ -37,8 +37,8 @@ class TemperatureSensorChannel(AbstractChannel):
             identifier,
             floor,
             room,
-            displayName,
-            functionID,
+            display_name,
+            function_id,
             parameters,
             inputs,
             outputs,
@@ -49,16 +49,18 @@ class TemperatureSensorChannel(AbstractChannel):
         parent = super().__str__()
         return f"Trigger-Channel:\n" f"{parent}"
 
-    def getOutdoorTemperature(self) -> float:
+    def get_outdoor_temperature(self) -> float:
         """Return OutdoorTemperature."""
-        datapoint = self.getOutputByPairingID(PairingIDs.AL_OUTDOOR_TEMPERATURE)
-        return float(datapoint.getValue())
+        datapoint = self.get_output_by_pairing_id(
+            PairingIDs.AL_OUTDOOR_TEMPERATURE
+        )
+        return float(datapoint.get_value())
 
-    def getState(self) -> float:
+    def get_state(self) -> float:
         """Return OutdoorTemperature."""
-        return self.getOutdoorTemperature()
+        return self.get_outdoor_temperature()
 
-    def getFrostAlarm(self) -> bool:
+    def get_frost_alarm(self) -> bool:
         """Return FrostAlarm."""
-        datapoint = self.getOutputByPairingID(PairingIDs.AL_FROST_ALARM)
-        return datapoint.getValue() == "1"
+        datapoint = self.get_output_by_pairing_id(PairingIDs.AL_FROST_ALARM)
+        return datapoint.get_value() == "1"

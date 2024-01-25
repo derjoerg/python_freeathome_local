@@ -20,10 +20,10 @@ class Floorplan:
         self.__floors = {}
 
         for key, value in config.items():
-            floorId = int(key, 16)
-            floor = Floor(floorId, value)
+            floor_id = int(key, 16)
+            floor = Floor(floor_id, value)
 
-            self.__floors[floorId] = floor
+            self.__floors[floor_id] = floor
 
     def __str__(self) -> str:
         """Redefine object-to-string."""
@@ -39,6 +39,6 @@ class Floorplan:
 
         return string
 
-    def getFloorById(self, id: int) -> Floor:
+    def get_floor_by_id(self, id: int) -> Floor:
         """Return Floor by specific ID."""
         return self.__floors[id]

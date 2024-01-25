@@ -23,31 +23,31 @@ class DatapointFactory:
         cls, channel: AbstractChannel, identifier: str, config: dict[str, Any]
     ) -> AbstractDatapoint:
         """Create a specific parameter object based on provided config."""
-        pairingID = 0
+        pairing_id = 0
         value = ""
 
         if "value" in config:
             value = config["value"]
 
         if "pairingID" in config:
-            pairingID = int(config["pairingID"])
+            pairing_id = int(config["pairingID"])
 
         for pairing in PairingIDs:
-            if pairingID == pairing.value:
+            if pairing_id == pairing.value:
                 break
 
         if "i" == identifier[:1]:
             datapoint = InputDatapoint(
                 channel=channel,
                 identifier=identifier,
-                pairingID=pairing,
+                pairing_id=pairing,
                 value=value,
             )
         elif "o" == identifier[:1]:
             datapoint = OutputDatapoint(
                 channel=channel,
                 identifier=identifier,
-                pairingID=pairing,
+                pairing_id=pairing,
                 value=value,
             )  # type: ignore
 

@@ -34,15 +34,15 @@ class FreeAtHome:
     """Main class for handling connections with Free@Home."""
 
     session: ClientSession | None = None
-    requestTimeout: float = 10.0
+    request_timeout: float = 10.0
     _client: ClientWebSocketResponse | None = None
     host: str = ""
     user: str = ""
     password: str = ""
-    restPath: str = "/fhapi/v1/api/rest"
-    wsPath: str = "/fhapi/v1/api/ws"
-    _sysAp: SysAp | None = None
-    _closeSession: bool = False
+    rest_path: str = "/fhapi/v1/api/rest"
+    ws_path: str = "/fhapi/v1/api/ws"
+    _sys_ap: SysAp | None = None
+    _close_session: bool = False
 
     @property
     def connected(self) -> bool:
@@ -70,19 +70,19 @@ class FreeAtHome:
 
         if self.session is None:
             self.session = ClientSession()
-            self._closeSession = True
+            self._close_session = True
 
         if not self.session:
             msg = "There is a generic problem with the session to the SysAp"
             raise FreeAtHomeError(msg)
 
-        basicAuth = b64encode(
+        basic_auth = b64encode(
             (self.user + ":" + self.password).encode()
         ).decode("ascii")
         headers = {
-            "Authorization": f"Basic {basicAuth}",
+            "Authorization": f"Basic {basic_auth}",
         }
-        url = URL.build(scheme="ws", host=self.host, port=80, path=self.wsPath)
+        url = URL.build(scheme="ws", host=self.host, port=80, path=self.ws_path)
 
         try:
             self._client = await self.session.ws_connect(
@@ -126,12 +126,15 @@ class FreeAtHome:
                 raise FreeAtHomeConnectionError(self._client.exception())
 
             if message.type == aiohttp.WSMsgType.TEXT:
-                messageData = message.json()
+                message_data = message.json()
 
-                if isinstance(self._sysAp, SysAp):
-                    if str(self._sysAp.getId()) == list(messageData.keys())[0]:
-                        datapoints = self._sysAp.updateFromDict(
-                            data=messageData[str(self._sysAp.getId())]
+                if isinstance(self._sys_ap, SysAp):
+                    if (
+                        str(self._sys_ap.get_id())
+                        == list(message_data.keys())[0]
+                    ):
+                        datapoints = self._sys_ap.update_from_dict(
+                            data=message_data[str(self._sys_ap.get_id())]
                         )
                         callback(datapoints)
 
@@ -153,20 +156,20 @@ class FreeAtHome:
 
         await self._client.close()
 
-    async def setDatapoint(self, datapoint: InputDatapoint) -> None:
+    async def set_datapoint(self, datapoint: InputDatapoint) -> None:
         """Send value to a datapoint on the SysAp."""
         uri = (
             "datapoint/"
-            + str(datapoint.getChannel().getDevice().getSysAp().getId())
+            + str(datapoint.get_channel().get_device().get_sys_ap().get_id())
             + "/"
-            + datapoint.getChannel().getDevice().getSerialNumber()
+            + datapoint.get_channel().get_device().get_serial_number()
             + "."
-            + datapoint.getChannel().getIdentifier()
+            + datapoint.get_channel().get_identifier()
             + "."
-            + datapoint.getIdentifier()
+            + datapoint.get_identifier()
         )
         print(f"{uri}")
-        data = str(datapoint.getValue())
+        data = str(datapoint.get_value())
         response = await self.request(uri=uri, method=METH_PUT, data=data)
         print(f"{response}")
 
@@ -205,7 +208,7 @@ class FreeAtHome:
             password=self.password,
             host=self.host,
             port=80,
-            path=self.restPath,
+            path=self.rest_path,
         ).joinpath(uri)
 
         headers = {
@@ -214,7 +217,7 @@ class FreeAtHome:
         }
 
         try:
-            async with asyncio.timeout(self.requestTimeout):
+            async with asyncio.timeout(self.request_timeout):
                 if isinstance(self.session, ClientSession):
                     response = await self.session.request(
                         method,
@@ -222,13 +225,13 @@ class FreeAtHome:
                         headers=headers,
                         data=data,
                     )
-            contentType = response.headers.get("Content-Type", "")
+            content_type = response.headers.get("Content-Type", "")
 
             if response.status // 100 in [4, 5]:
                 contents = await response.read()
                 response.close()
 
-                if contentType == "application/json":
+                if content_type == "application/json":
                     raise FreeAtHomeError(
                         response.status,
                         json.loads(contents.decode("utf8")),
@@ -238,10 +241,10 @@ class FreeAtHome:
                     {"message": contents.decode("utf8")},
                 )
 
-            if "application/json" in contentType:
-                responseData = await response.json()
+            if "application/json" in content_type:
+                response_data = await response.json()
             else:
-                responseData = await response.text()
+                response_data = await response.text()
 
         except TimeoutError as exception:
             msg = f"Timeout occured while connecting to SysAp at {self.host}"
@@ -250,9 +253,9 @@ class FreeAtHome:
             msg = f"Error occured while communicating with SysAp at {self.host}"
             raise FreeAtHomeConnectionError(msg) from exception
 
-        return cast(dict[str, Any], responseData)
+        return cast(dict[str, Any], response_data)
 
-    async def loadSysAp(self, sysApOnly: bool = True) -> SysAp:
+    async def load_sys_ap(self, sys_ap_only: bool = True) -> SysAp:
         """Get all configuration from the SysAp in a single call.
 
         This method receives all SysAp information available with a single
@@ -271,19 +274,21 @@ class FreeAtHome:
 
         if 1 == len(response):
             uuid = list(response.keys())[0]
-            self._sysAp = SysAp.fromApi(self, uuid, response[uuid], sysApOnly)
+            self._sys_ap = SysAp.from_api(
+                self, uuid, response[uuid], sys_ap_only
+            )
 
-        if self._sysAp is None:
+        if self._sys_ap is None:
             msg = f"The needed configuration was not received from {self.host}"
             raise FreeAtHomeEmptyResponseError(msg) from Exception
 
-        return self._sysAp
+        return self._sys_ap
 
     async def close(self) -> None:
         """Close open client (WebSocket) session."""
         await self.disconnect()
 
-        if self.session and self._closeSession:
+        if self.session and self._close_session:
             await self.session.close()
 
     async def __aenter__(self) -> Self:

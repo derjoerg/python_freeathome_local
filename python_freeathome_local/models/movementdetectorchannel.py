@@ -25,8 +25,8 @@ class MovementDetectorChannel(AbstractChannel):
         identifier: str,
         floor: Floor,
         room: Room,
-        displayName: str,
-        functionID: FunctionIDs,
+        display_name: str,
+        function_id: FunctionIDs,
         parameters: dict[str, Any],
         inputs: dict[str, Any],
         outputs: dict[str, Any],
@@ -37,8 +37,8 @@ class MovementDetectorChannel(AbstractChannel):
             identifier,
             floor,
             room,
-            displayName,
-            functionID,
+            display_name,
+            function_id,
             parameters,
             inputs,
             outputs,
@@ -49,29 +49,31 @@ class MovementDetectorChannel(AbstractChannel):
         parent = super().__str__()
         return f"Trigger-Channel:\n" f"{parent}"
 
-    def getInfoOnOff(self) -> bool:
+    def get_info_on_off(self) -> bool:
         """Return InfoOnOff."""
         """This will be only set if the movement detector is e.g. attached """
         """to a switch or light"""
-        datapoint = self.getInputByPairingID(PairingIDs.AL_INFO_ON_OFF)
-        return datapoint.getValue() == "1"
+        datapoint = self.get_input_by_pairing_id(PairingIDs.AL_INFO_ON_OFF)
+        return datapoint.get_value() == "1"
 
-    def getState(self) -> bool:
+    def get_state(self) -> bool:
         """Return InfoOnOff."""
-        return self.getInfoOnOff()
+        return self.get_info_on_off()
 
-    def getBrightnessLevel(self) -> float:
+    def get_brightness_level(self) -> float:
         """Return BrightnessLevel."""
-        datapoint = self.getOutputByPairingID(PairingIDs.AL_BRIGHTNESS_LEVEL)
-        return float(datapoint.getValue())
+        datapoint = self.get_output_by_pairing_id(
+            PairingIDs.AL_BRIGHTNESS_LEVEL
+        )
+        return float(datapoint.get_value())
 
-    def getTimedMovement(self) -> bool:
+    def get_timed_movement(self) -> bool:
         """Return always True, just when it is triggered it is movement."""
         """A momentary switch, which is triggered if movement is detected."""
-        datapoint = self.getOutputByPairingID(PairingIDs.AL_TIMED_MOVEMENT)
-        return datapoint.getValue() == "1"
+        datapoint = self.get_output_by_pairing_id(PairingIDs.AL_TIMED_MOVEMENT)
+        return datapoint.get_value() == "1"
 
-    def getTimedPresence(self) -> bool:
+    def get_timed_presence(self) -> bool:
         """I don't know."""
-        datapoint = self.getOutputByPairingID(PairingIDs.AL_TIMED_PRESENCE)
-        return datapoint.getValue() == "1"
+        datapoint = self.get_output_by_pairing_id(PairingIDs.AL_TIMED_PRESENCE)
+        return datapoint.get_value() == "1"

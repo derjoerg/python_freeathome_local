@@ -25,8 +25,8 @@ class BrightnessSensorChannel(AbstractChannel):
         identifier: str,
         floor: Floor,
         room: Room,
-        displayName: str,
-        functionID: FunctionIDs,
+        display_name: str,
+        function_id: FunctionIDs,
         parameters: dict[str, Any],
         inputs: dict[str, Any],
         outputs: dict[str, Any],
@@ -37,8 +37,8 @@ class BrightnessSensorChannel(AbstractChannel):
             identifier,
             floor,
             room,
-            displayName,
-            functionID,
+            display_name,
+            function_id,
             parameters,
             inputs,
             outputs,
@@ -49,16 +49,20 @@ class BrightnessSensorChannel(AbstractChannel):
         parent = super().__str__()
         return f"Trigger-Channel:\n" f"{parent}"
 
-    def getBrightnessLevel(self) -> float:
+    def get_brightness_level(self) -> float:
         """Return BrightnessLevel."""
-        datapoint = self.getOutputByPairingID(PairingIDs.AL_BRIGHTNESS_LEVEL)
-        return float(datapoint.getValue())
+        datapoint = self.get_output_by_pairing_id(
+            PairingIDs.AL_BRIGHTNESS_LEVEL
+        )
+        return float(datapoint.get_value())
 
-    def getState(self) -> float:
+    def get_state(self) -> float:
         """Return BrightnessLevel."""
-        return self.getBrightnessLevel()
+        return self.get_brightness_level()
 
-    def getBrightnessAlarm(self) -> bool:
+    def get_brightness_alarm(self) -> bool:
         """Return BrightnessAlarm."""
-        datapoint = self.getOutputByPairingID(PairingIDs.AL_BRIGHTNESS_ALARM)
-        return datapoint.getValue() == "1"
+        datapoint = self.get_output_by_pairing_id(
+            PairingIDs.AL_BRIGHTNESS_ALARM
+        )
+        return datapoint.get_value() == "1"
