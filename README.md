@@ -26,7 +26,7 @@ E.g. the WeatherStation has a parameter called 'par0039' (TRANSMISSION_INTERVAL)
 ## Implemented channels
 | Name | Inputs | Outputs |
 |--|--|--|
-| BrightnessSensor | - | brightness_level (float) - state<br>_brightness_alarm (bool) |
+| BrightnessSensor | - | brightness_level (float) - state<br>brightness_alarm (bool) |
 | RainSensor       | - | rain_alarm (bool) - state<br>rain_sensor_activation_percentage (float)<br>rain_sensor_frequency (float) |
 | TemperatureSensor | - | outdoor_temperature (float) - state<br>frost_alarm (bool) |
 | WindSensor | - | wind_speed (float) - state<br>wind_alarm (bool)<br>wind_force (float) |
