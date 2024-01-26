@@ -31,7 +31,7 @@ E.g. the WeatherStation has a parameter called 'par0039' (TRANSMISSION_INTERVAL)
 | TemperatureSensor | - | outdoor_temperature (float) - state<br>frost_alarm (bool) |
 | WindSensor | - | wind_speed (float) - state<br>wind_alarm (bool)<br>wind_force (float) |
 | Trigger | timed_start_stop - press | - |
-| SwitchActuator | switch_on_off(bool) - turn_on/turn_off<br>forced(bool)<br>timed_start_stop(bool)<br>timed_movement(bool) | info_on_off (bool) - state<br>info_force (bool)<br>info_error (bool) |
+| SwitchActuator | switch_on_off (bool) - turn_on/turn_off<br>forced (bool)<br>timed_start_stop (bool)<br>timed_movement (bool) | info_on_off (bool) - state<br>info_force (bool)<br>info_error (bool) |
 | WindowDoorSensor | - | window_door (bool) - state |
 | MovementDetector | info_on_off | info_on_off (bool) - state<br>brightness_level (float)<br>timed_movement (bool)<br>timed_presence (bool) |
 | SwitchSensor | - | switch_on_off (bool) - state |
