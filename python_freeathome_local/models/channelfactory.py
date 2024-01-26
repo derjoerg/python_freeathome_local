@@ -11,6 +11,7 @@ from ..functionids import FunctionIDs
 from .abstractchannel import AbstractChannel
 from .brightnesssensorchannel import BrightnessSensorChannel  # noqa: F401
 from .floor import Floor
+from .forceonoffsensorchannel import ForceOnOffSensorChannel  # noqa: F401
 from .movementdetectorchannel import MovementDetectorChannel  # noqa: F401
 from .rainsensorchannel import RainSensorChannel  # noqa: F401
 from .switchactuatorchannel import SwitchActuatorChannel  # noqa: F401

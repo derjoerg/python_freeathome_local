@@ -129,6 +129,18 @@ async def main() -> None:
             #    .get_channel_by_identifier("ch0000")
             #    .get_state()
             # )
+            # ForceOnOffSensor
+            # print(
+            #     sys_ap
+            #     .get_device_by_identifier("ABB700D9AD95")
+            #     .get_channel_by_identifier("ch0000")
+            # )
+            # print(
+            #     sys_ap
+            #     .get_device_by_identifier("ABB700D9AD95")
+            #     .get_channel_by_identifier("ch0000")
+            #     .get_state()
+            # )
 
             # Trigger
             # result = (
@@ -166,6 +178,9 @@ async def main() -> None:
                     ")",
                     " - ",
                     datapoint.get_pairing_id().name,
+                    "(",
+                    datapoint.get_identifier(),
+                    ")",
                     " : ",
                     datapoint.get_value(),
                 )
