@@ -141,6 +141,18 @@ async def main() -> None:
             #     .get_channel_by_identifier("ch0000")
             #     .get_state()
             # )
+            # BlindSensor
+            # print(
+            #     sys_ap
+            #     .get_device_by_identifier("ABB700DAD681")
+            #     .get_channel_by_identifier("ch0003")
+            # )
+            # print(
+            #     sys_ap
+            #     .get_device_by_identifier("ABB700DAD681")
+            #     .get_channel_by_identifier("ch0003")
+            #     .get_state()
+            # )
 
             # Trigger
             # result = (
