@@ -26,12 +26,12 @@ E.g. the WeatherStation has a parameter called 'par0039' (TRANSMISSION_INTERVAL)
 ## Implemented channels
 | Name | Inputs | Outputs |
 |--|--|--|
-| BrightnessSensor | - | BrightnessLevel (float) - state<br>BrightnessAlarm (bool) |
-| RainSensor       | - | RainAlarm (bool) - state<br>RainSensorActivationPercentage (float)<br>rainSensorFrequency (float) |
-| TemperatureSensor | - | OutdoorTemperature (float) - state<br>FrostAlarm (bool) |
-| WindSensor | - | WindSpeed (float) - state<br>WindAlarm (bool)<br>WindForce (float) |
-| Trigger | TimedStartStop - press | - |
-| SwitchActuator | SwitchOnOff(bool) - turnOn/turnOff<br>Forced(bool)<br>TimedStartStop(bool)<br>TimedMovement(bool) | InfoOnOff (bool) - state<br>InfoForce (bool)<br>InfoError (bool) |
-| WindowDoorSensor | - | WindowDoor (bool) - state |
-| MovementDetector | InfoOnOff | InfoOnOff (bool) - state<br>BrightnessLevel (float)<br>TimedMovement (bool)<br>TimedPresence (bool) |
-| SwitchSensor | - | SwitchOnOff (bool) - state |
+| BrightnessSensor | - | brightness_level (float) - state<br>_brightness_alarm (bool) |
+| RainSensor       | - | rain_alarm (bool) - state<br>rain_sensor_activation_percentage (float)<br>rain_sensor_frequency (float) |
+| TemperatureSensor | - | outdoor_temperature (float) - state<br>frost_alarm (bool) |
+| WindSensor | - | wind_speed (float) - state<br>wind_alarm (bool)<br>wind_force (float) |
+| Trigger | timed_start_stop - press | - |
+| SwitchActuator | switch_on_off(bool) - turn_on/turn_off<br>forced(bool)<br>timed_start_stop(bool)<br>timed_movement(bool) | info_on_off (bool) - state<br>info_force (bool)<br>info_error (bool) |
+| WindowDoorSensor | - | window_door (bool) - state |
+| MovementDetector | info_on_off | info_on_off (bool) - state<br>brightness_level (float)<br>timed_movement (bool)<br>timed_presence (bool) |
+| SwitchSensor | - | switch_on_off (bool) - state |
