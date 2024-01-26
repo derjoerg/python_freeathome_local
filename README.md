@@ -1,5 +1,13 @@
 # python_freeathome_local
 
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/python_freeathome_local?logo=python)
+[![PyPI release](https://img.shields.io/pypi/v/python_freeathome_local)](https://pypi.org/project/python_freeathome_local/)
+![Release status](https://img.shields.io/pypi/status/python_freeathome_local)
+![Build Pipeline](https://img.shields.io/github/actions/workflow/status/derjoerg/python_freeathome_local/ci.yml)
+[![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
+[![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=f8b424)](https://github.com/pre-commit/pre-commit)
+![License](https://img.shields.io/github/license/derjoerg/python_freeathome_local)
+
 The datamodel of the Free@Home Rest-API is setup the following way:
 - The root-node is a SysAp
 - The SysAp contains devices and a floorplan
