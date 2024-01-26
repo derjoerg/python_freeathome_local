@@ -23,10 +23,9 @@ class ParameterFactory:
 
         for param in ParameterIDs:
             if parameter_id == param.value:
+                parameter_value = param
                 break
 
-        parameter = Parameter(
-            identifier=identifier, parameter_id=param, value=value
-        )
+        parameter = Parameter(identifier, parameter_value, value)
 
         return parameter

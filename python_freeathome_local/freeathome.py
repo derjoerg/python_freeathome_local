@@ -1,5 +1,7 @@
 """Asynchronous Python client for the local Busch-Jaeger Free@Home API."""
 
+# pylint: disable=too-many-instance-attributes
+
 from __future__ import annotations
 
 import asyncio
@@ -130,11 +132,13 @@ class FreeAtHome:
 
                 if isinstance(self._sys_ap, SysAp):
                     if (
-                        str(self._sys_ap.get_id())
+                        str(self._sys_ap.get_identifier())
                         == list(message_data.keys())[0]
                     ):
                         datapoints = self._sys_ap.update_from_dict(
-                            data=message_data[str(self._sys_ap.get_id())]
+                            data=message_data[
+                                str(self._sys_ap.get_identifier())
+                            ]
                         )
                         callback(datapoints)
 
@@ -160,7 +164,12 @@ class FreeAtHome:
         """Send value to a datapoint on the SysAp."""
         uri = (
             "datapoint/"
-            + str(datapoint.get_channel().get_device().get_sys_ap().get_id())
+            + str(
+                datapoint.get_channel()
+                .get_device()
+                .get_sys_ap()
+                .get_identifier()
+            )
             + "/"
             + datapoint.get_channel().get_device().get_serial_number()
             + "."

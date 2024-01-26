@@ -18,6 +18,7 @@ if TYPE_CHECKING:
     from .sysap import SysAp
 
 
+# pylint: disable=too-many-instance-attributes
 class AbstractDevice(ABC):
     """Model for an abstract Device."""
 
@@ -32,6 +33,7 @@ class AbstractDevice(ABC):
     __channels: dict[str, AbstractChannel]
     __parameters: dict[str, AbstractParameter]
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         sys_ap: SysAp,
@@ -72,14 +74,17 @@ class AbstractDevice(ABC):
     def __str__(self) -> str:
         """Redefine object-to-string."""
         string = (
-            f"Serial  : {self.__serial_number}\n"
-            f"Name    : {self.__display_name}\n"
-            f"Floor   : {self.__floor}\n"
-            f"Room    : {self.__room}\n"
-            f"Channels: {len(self.__channels)}"
+            f"Serial      : {self.__serial_number}\n"
+            f"Defect      : {self.__defect}\n"
+            f"Unresponsive: {self.__unresponsive}\n"
+            f"U-Counter   : {self.__unresponsive_counter}\n"
+            f"Name        : {self.__display_name}\n"
+            f"Floor       : {self.__floor}\n"
+            f"Room        : {self.__room}\n"
+            f"Channels    : {len(self.__channels)}"
         )
 
-        for key, channel in self.__channels.items():
+        for channel in self.__channels.values():
             value = str(channel)
             string = f"{string}\n" f"{textwrap.indent(value, '    ')}\n"
 
@@ -89,7 +94,7 @@ class AbstractDevice(ABC):
             f"----------"
         )
 
-        for key, parameter in self.__parameters.items():
+        for parameter in self.__parameters.values():
             value = str(parameter)
             string = f"{string}\n" f"{textwrap.indent(value, '    ')}\n"
 
@@ -107,9 +112,9 @@ class AbstractDevice(ABC):
         """Return all Channels of the Device."""
         return self.__channels
 
-    def get_channel_by_id(self, id: str) -> AbstractChannel:
+    def get_channel_by_identifier(self, identifier: str) -> AbstractChannel:
         """Return specific Channel of the Device."""
-        return self.__channels[id]
+        return self.__channels[identifier]
 
     def get_display_name(self) -> str:
         """Return DisplayName of the Device."""

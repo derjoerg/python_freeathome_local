@@ -21,6 +21,7 @@ if TYPE_CHECKING:
     from .room import Room
 
 
+# pylint: disable=too-many-instance-attributes
 class AbstractChannel(ABC):
     """Model for an abstract Channel."""
 
@@ -34,6 +35,7 @@ class AbstractChannel(ABC):
     _outputs: dict[str, OutputDatapoint] | None = None
     _parameters: dict[str, Parameter] | None = None
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         device: AbstractDevice,
@@ -101,8 +103,8 @@ class AbstractChannel(ABC):
         if isinstance(self._inputs, dict):
             string = f"{string}\nInputs: {len(self._inputs)}\n----------"
 
-            for key, input in self._inputs.items():
-                value = str(input)
+            for datapoint_i in self._inputs.values():
+                value = str(datapoint_i)
                 string = (
                     f"{string}\n"
                     f"{textwrap.indent(value, '    ')}\n"
@@ -112,8 +114,8 @@ class AbstractChannel(ABC):
         if isinstance(self._outputs, dict):
             string = f"{string}\nOutputs: {len(self._outputs)}\n----------"
 
-            for key, output in self._outputs.items():
-                value = str(output)
+            for datapoint_o in self._outputs.values():
+                value = str(datapoint_o)
                 string = (
                     f"{string}\n"
                     f"{textwrap.indent(value, '    ')}\n"
@@ -125,7 +127,7 @@ class AbstractChannel(ABC):
                 f"{string}\nParameters: {len(self._parameters)}\n----------"
             )
 
-            for key, parameter in self._parameters.items():
+            for parameter in self._parameters.values():
                 value = str(parameter)
                 string = (
                     f"{string}\n"
@@ -192,7 +194,7 @@ class AbstractChannel(ABC):
     ) -> AbstractDatapoint:
         """Return OutputDatapoint of a specific PairingID."""
         if isinstance(self._outputs, dict):
-            for key, value in self._outputs.items():
+            for value in self._outputs.values():
                 if value.get_pairing_id() == pairing_id:
                     return value
 
@@ -203,7 +205,7 @@ class AbstractChannel(ABC):
     ) -> AbstractDatapoint:
         """Return InputDatapoint of a specific PairingID."""
         if isinstance(self._inputs, dict):
-            for key, value in self._inputs.items():
+            for value in self._inputs.values():
                 if value.get_pairing_id() == pairing_id:
                     return value
 

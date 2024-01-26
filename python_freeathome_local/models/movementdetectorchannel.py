@@ -19,6 +19,7 @@ if TYPE_CHECKING:
 class MovementDetectorChannel(AbstractChannel):
     """Model for a Movement-Detector-Channel."""
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         device: AbstractDevice,
@@ -51,8 +52,8 @@ class MovementDetectorChannel(AbstractChannel):
 
     def get_info_on_off(self) -> bool:
         """Return InfoOnOff."""
-        """This will be only set if the movement detector is e.g. attached """
-        """to a switch or light"""
+        # This will be only set if the movement detector is e.g. attached
+        # to a switch or light
         datapoint = self.get_input_by_pairing_id(PairingIDs.AL_INFO_ON_OFF)
         return datapoint.get_value() == "1"
 
@@ -69,7 +70,7 @@ class MovementDetectorChannel(AbstractChannel):
 
     def get_timed_movement(self) -> bool:
         """Return always True, just when it is triggered it is movement."""
-        """A momentary switch, which is triggered if movement is detected."""
+        # A momentary switch, which is triggered if movement is detected.
         datapoint = self.get_output_by_pairing_id(PairingIDs.AL_TIMED_MOVEMENT)
         return datapoint.get_value() == "1"
 

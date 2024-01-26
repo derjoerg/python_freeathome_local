@@ -16,6 +16,7 @@ if TYPE_CHECKING:
 class OutputDatapoint(AbstractDatapoint):
     """Model for an Output-Datapoint."""
 
+    # pylint: disable=useless-parent-delegation
     def __init__(
         self,
         channel: AbstractChannel,

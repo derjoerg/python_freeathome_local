@@ -16,6 +16,7 @@ if TYPE_CHECKING:
 class InputDatapoint(AbstractDatapoint):
     """Model for an Input-Datapoint."""
 
+    # pylint: disable=useless-parent-delegation
     def __init__(
         self,
         channel: AbstractChannel,
@@ -31,14 +32,14 @@ class InputDatapoint(AbstractDatapoint):
         parent = super().__str__()
         return f"Input-Datapoint:\n" f"{parent}"
 
+    # pylint: disable=invalid-overridden-method
     async def set_value(self, value: int) -> None:  # type: ignore
         """Set Value of current Datapoint and inform SysAp."""
-        """Running mypy over this function I get
-           error: Return type "Coroutine[Any, Any, InputDatapoint]"
-               of "setValue" incompatible with return type "AbstractDatapoint"
-               in supertype "AbstractDatapoint"  [override]
-            I don't know how to solve this
-        """
+        # Running mypy over this function I get
+        #   error: Return type "Coroutine[Any, Any, InputDatapoint]"
+        #       of "setValue" incompatible with return type "AbstractDatapoint"
+        #       in supertype "AbstractDatapoint"  [override]
+        #    I don't know how to solve this
         super().set_value(value)
         #        return (
         #            await self.get_channel()

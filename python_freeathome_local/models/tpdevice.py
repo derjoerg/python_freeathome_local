@@ -19,6 +19,7 @@ class TPDevice(AbstractDevice):
 
     __interface: str = "TP"
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         sys_ap: SysAp,

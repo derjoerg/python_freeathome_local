@@ -7,21 +7,22 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Self
 from uuid import UUID
 
+from ..exceptions import FreeAtHomeError
 from .abstractdevice import AbstractDevice
 from .devicefactory import DeviceFactory
 from .floorplan import Floorplan
 
 if TYPE_CHECKING:
-    from ..exceptions import FreeAtHomeError
     from ..freeathome import FreeAtHome
 
 
+# pylint: disable=too-many-instance-attributes
 @dataclass
 class SysAp:
     """Model for a SysAp."""
 
     __api: FreeAtHome
-    __id: UUID
+    __identifier: UUID
     __connection_state: str
     __name: str
     __uart_serial_number: str
@@ -29,20 +30,21 @@ class SysAp:
     __devices: dict[str, AbstractDevice]
     __floorplan: Floorplan
 
+    # pylint: disable=too-many-locals,too-many-branches
     @classmethod
     def from_api(
         cls,
         api: FreeAtHome,
-        id: str,
+        identifier: str,
         config: dict[str, Any],
         sys_ap_only: bool = True,
     ) -> Self:
         """Initialize a SysAp device from the API."""
         try:
-            correct_id = UUID(str(id))
-        except ValueError:
-            msg = f"The provided id '{id}' is malformed."
-            raise FreeAtHomeError(msg)
+            correct_id = UUID(str(identifier))
+        except ValueError as exception:
+            msg = f"The provided id '{identifier}' is malformed."
+            raise FreeAtHomeError(msg) from exception
 
         if "connectionState" in config:
             conn_state = config["connectionState"]
@@ -72,7 +74,7 @@ class SysAp:
 
         sys_ap = cls(
             api=api,
-            id=correct_id,
+            identifier=correct_id,
             connection_state=conn_state,
             name=sysap_name,
             uart_serial_number=uart_serial_number,
@@ -82,7 +84,7 @@ class SysAp:
         if sys_ap_only is False:
             if "floorplan" in config:
                 for key, value in config["floorplan"].items():
-                    sys_ap.__floorplan = Floorplan(value)
+                    sys_ap.set_floorplan(Floorplan(value))
 
             if "devices" in config:
                 for key, value in config["devices"].items():
@@ -136,14 +138,14 @@ class SysAp:
         """Redefine object-to-string."""
         string = (
             f"Name      : {self.__name}\n"
-            f"Id        : {self.__id}\n"
+            f"Identifier: {self.__identifier}\n"
             f"State     : {self.__connection_state}\n"
             f"uartSerial: {self.__uart_serial_number}\n"
             f"Version   : {self.__version}\n"
             f"Devices   : {len(self.__devices)}"
         )
 
-        for key, device in self.__devices.items():
+        for device in self.__devices.values():
             value = str(device)
             string = (
                 f"{string}\n"
@@ -156,10 +158,11 @@ class SysAp:
 
         return string
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         api: FreeAtHome,
-        id: UUID,
+        identifier: UUID,
         connection_state: str,
         name: str,
         uart_serial_number: str,
@@ -177,7 +180,7 @@ class SysAp:
                 way that a Device object cannot be constructed from it.
         """
         self.__api = api
-        self.__id = id
+        self.__identifier = identifier
         self.__connection_state = connection_state
         self.__name = name
         self.__uart_serial_number = uart_serial_number
@@ -188,18 +191,22 @@ class SysAp:
         """Return API."""
         return self.__api
 
-    def get_id(self) -> UUID:
+    def get_identifier(self) -> UUID:
         """Return Id of SysAp."""
-        return self.__id
+        return self.__identifier
 
     def get_floorplan(self) -> Floorplan:
         """Return Floorplan."""
         return self.__floorplan
 
-    def get_device_by_id(self, id: str) -> AbstractDevice:
+    def get_device_by_identifier(self, identifier: str) -> AbstractDevice:
         """Return specific Device by ID."""
-        return self.__devices[id]
+        return self.__devices[identifier]
 
     def set_device(self, key: str, device: AbstractDevice) -> None:
         """Set specific Device."""
         self.__devices[key] = device
+
+    def set_floorplan(self, floorplan: Floorplan) -> None:
+        """Set Floorplan."""
+        self.__floorplan = floorplan

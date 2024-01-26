@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 class DeviceFactory:
     """Factory class for a device."""
 
+    # pylint: disable=too-many-locals,too-many-branches
     @classmethod
     def create(
         cls, sys_ap: SysAp, serial_number: str, config: dict[str, Any]
@@ -36,7 +37,7 @@ class DeviceFactory:
             orig_floor = config["floor"]
 
             if orig_floor != "":
-                floor = sys_ap.get_floorplan().get_floor_by_id(
+                floor = sys_ap.get_floorplan().get_floor_by_identifier(
                     int(orig_floor, 16)
                 )
 
@@ -44,7 +45,7 @@ class DeviceFactory:
             orig_room = config["room"]
 
             if orig_room != "" and isinstance(floor, Floor):
-                room = floor.get_room_by_id(int(orig_room, 16))
+                room = floor.get_room_by_identifier(int(orig_room, 16))
 
         if "displayName" in config:
             display_name = config["displayName"]
@@ -68,15 +69,15 @@ class DeviceFactory:
             interface = config["interface"]
 
             if "sonos" == config["interface"]:
-                """We ignore sonos devices"""
+                # We ignore sonos devices
                 print(
                     f"We ignore the device '{serial_number}' as it is a Sonos"
                 )
             elif "hue" == config["interface"]:
-                """We ignore hue devices"""
+                # We ignore hue devices
                 print(f"We ignore device '{serial_number}' as it is a Hue")
             elif "TP" == config["interface"]:
-                """TP devices will be processed"""
+                # TP devices will be processed
                 print(
                     f"Let's process device '{serial_number}' "
                     f"with the name '{display_name}' as it is a TP device"
@@ -101,14 +102,14 @@ class DeviceFactory:
                     print("\tNo channels, so not added.")
 
             else:
-                """All other interface devices will be ignored"""
+                # All other interface devices will be ignored
                 print(
                     f"We ignore device '{serial_number}' "
                     f"with the interface '{interface}' "
                     f"and the name '{display_name}'"
                 )
         else:
-            """We ignore devices without an interface"""
+            # We ignore devices without an interface
             print(
                 f"The device '{serial_number}' "
                 f"with the name '{display_name}' will be ignored"

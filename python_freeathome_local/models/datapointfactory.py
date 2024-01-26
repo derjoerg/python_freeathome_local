@@ -34,20 +34,21 @@ class DatapointFactory:
 
         for pairing in PairingIDs:
             if pairing_id == pairing.value:
+                pairing_value = pairing
                 break
 
         if "i" == identifier[:1]:
             datapoint = InputDatapoint(
                 channel=channel,
                 identifier=identifier,
-                pairing_id=pairing,
+                pairing_id=pairing_value,
                 value=value,
             )
         elif "o" == identifier[:1]:
             datapoint = OutputDatapoint(
                 channel=channel,
                 identifier=identifier,
-                pairing_id=pairing,
+                pairing_id=pairing_value,
                 value=value,
             )  # type: ignore
 

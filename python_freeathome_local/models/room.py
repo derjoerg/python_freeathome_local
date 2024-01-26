@@ -10,12 +10,12 @@ from typing import Any
 class Room:
     """Model for a Room."""
 
-    __id: int
+    __identifier: int
     __name: str
 
-    def __init__(self, id: int, config: dict[str, Any]):
+    def __init__(self, identifier: int, config: dict[str, Any]):
         """Initialize a Room."""
-        self.__id = id
+        self.__identifier = identifier
         self.__name = ""
 
         if "name" in config:
@@ -23,11 +23,11 @@ class Room:
 
     def __str__(self) -> str:
         """Redefine object-to-string."""
-        return f"{self.__id} - {self.__name}"
+        return f"{self.__identifier} - {self.__name}"
 
-    def get_id(self) -> int:
+    def get_identifier(self) -> int:
         """Return Id of Room."""
-        return self.__id
+        return self.__identifier
 
     def get_name(self) -> str:
         """Return Name of Room."""

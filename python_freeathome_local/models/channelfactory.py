@@ -1,5 +1,7 @@
 """Asynchronous Python client for Free@Home."""
 
+# pylint: disable=unused-import
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -26,12 +28,13 @@ if TYPE_CHECKING:
 class ChannelFactory:
     """Factory class for a channel."""
 
+    # pylint: disable=too-many-locals,too-many-branches
     @classmethod
     def create(
-        cls, device: AbstractDevice, identifier: str, config: dict[str, Any]
+        cls, the_device: AbstractDevice, identifier: str, config: dict[str, Any]
     ) -> AbstractChannel | None:
         """Create a specific channel object based on provided config."""
-        device = device
+        device = the_device
         orig_floor = ""
         orig_room = ""
         display_name = ""
@@ -48,14 +51,14 @@ class ChannelFactory:
                 floor = (
                     device.get_sys_ap()
                     .get_floorplan()
-                    .get_floor_by_id(int(orig_floor, 16))
+                    .get_floor_by_identifier(int(orig_floor, 16))
                 )
 
         if "room" in config:
             orig_room = config["room"]
 
             if orig_room != "" and isinstance(floor, Floor):
-                room = floor.get_room_by_id(int(orig_room, 16))
+                room = floor.get_room_by_identifier(int(orig_room, 16))
 
         if "displayName" in config:
             display_name = config["displayName"]
@@ -101,5 +104,5 @@ class ChannelFactory:
 
         if isinstance(channel, AbstractChannel):
             return channel
-        else:
-            return None
+
+        return None

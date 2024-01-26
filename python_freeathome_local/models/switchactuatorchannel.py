@@ -19,6 +19,7 @@ if TYPE_CHECKING:
 class SwitchActuatorChannel(AbstractChannel):
     """Model for a SwitchActuator-Channel."""
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         device: AbstractDevice,

@@ -15,6 +15,7 @@ if TYPE_CHECKING:
 class Parameter(AbstractParameter):
     """Model for a Parameter."""
 
+    # pylint: disable=useless-parent-delegation
     def __init__(self, identifier: str, parameter_id: ParameterIDs, value: str):
         """Initialize a Parameter."""
         super().__init__(identifier, parameter_id, value)

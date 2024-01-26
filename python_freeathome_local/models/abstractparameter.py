@@ -23,3 +23,7 @@ class AbstractParameter(ABC):
     def __str__(self) -> str:
         """Redefine object-to-string."""
         return f"{self.__identifier} - {self.__value} - {self.__parameter_id}"
+
+    def get_identifier(self) -> str:
+        """Return identifier."""
+        return self.__identifier

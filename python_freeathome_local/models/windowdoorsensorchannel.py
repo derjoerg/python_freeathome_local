@@ -19,6 +19,7 @@ if TYPE_CHECKING:
 class WindowDoorSensorChannel(AbstractChannel):
     """Model for a Window-Door-Sensor-Channel."""
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         device: AbstractDevice,

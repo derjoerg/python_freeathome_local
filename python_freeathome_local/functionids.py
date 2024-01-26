@@ -3,6 +3,8 @@
 import enum
 from typing import Any
 
+# pylint: disable=line-too-long,no-value-for-parameter
+
 
 class MyEnumMeta(enum.EnumMeta):
     """EnumMeta."""
@@ -13,8 +15,8 @@ class MyEnumMeta(enum.EnumMeta):
             cls(item)
         except ValueError:
             return False
-        else:
-            return True
+
+        return True
 
 
 class FunctionIDs(enum.Enum, metaclass=MyEnumMeta):

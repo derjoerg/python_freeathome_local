@@ -3,6 +3,7 @@
 from enum import Enum
 
 # flake8: noqa: E501
+# pylint: disable=line-too-long
 
 
 class ParameterIDs(Enum):

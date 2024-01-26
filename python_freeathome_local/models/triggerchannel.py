@@ -19,6 +19,7 @@ if TYPE_CHECKING:
 class TriggerChannel(AbstractChannel):
     """Model for a Trigger-Channel."""
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         device: AbstractDevice,

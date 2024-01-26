@@ -29,7 +29,7 @@ class Floorplan:
         """Redefine object-to-string."""
         string = f"Floors: {len(self.__floors)}"
 
-        for key, floor in self.__floors.items():
+        for floor in self.__floors.values():
             value = str(floor)
             string = (
                 f"{string}\n"
@@ -39,6 +39,6 @@ class Floorplan:
 
         return string
 
-    def get_floor_by_id(self, id: int) -> Floor:
+    def get_floor_by_identifier(self, identifier: int) -> Floor:
         """Return Floor by specific ID."""
-        return self.__floors[id]
+        return self.__floors[identifier]
