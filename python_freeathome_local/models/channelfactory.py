@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Any
 
 from ..functionids import FunctionIDs
 from .abstractchannel import AbstractChannel
+from .blindsensorchannel import BlindSensorChannel  # noqa: F401
 from .brightnesssensorchannel import BrightnessSensorChannel  # noqa: F401
 from .floor import Floor
 from .forceonoffsensorchannel import ForceOnOffSensorChannel  # noqa: F401
