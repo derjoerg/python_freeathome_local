@@ -35,3 +35,4 @@ E.g. the WeatherStation has a parameter called 'par0039' (TRANSMISSION_INTERVAL)
 | WindowDoorSensor | - | window_door (bool) - state |
 | MovementDetector | info_on_off | info_on_off (bool) - state<br>brightness_level (float)<br>timed_movement (bool)<br>timed_presence (bool) |
 | SwitchSensor | - | switch_on_off (bool) - state |
+| ForceOnOffSensor | - | forced (bool) - state |
