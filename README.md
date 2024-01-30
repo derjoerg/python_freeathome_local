@@ -37,3 +37,4 @@ E.g. the WeatherStation has a parameter called 'par0039' (TRANSMISSION_INTERVAL)
 | SwitchSensor | - | switch_on_off (bool) - state |
 | ForceOnOffSensor | - | forced (bool) - state |
 | BlindSensor | - | stop_step_up_down (bool) - state |
+| DesDoorRingingSensor | - | timed_start_stop (bool) - state |

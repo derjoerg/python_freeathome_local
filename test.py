@@ -153,6 +153,17 @@ async def main() -> None:
             #     .get_channel_by_identifier("ch0003")
             #     .get_state()
             # )
+            # DesDoorRingingSensor
+            # print(
+            #     sys_ap
+            #     .get_device_by_identifier("0007EE9503A4")
+            #     .get_channel_by_identifier("ch004a")
+            # )
+            # print(
+            #     sys_ap.get_device_by_identifier("0007EE9503A4")
+            #     .get_channel_by_identifier("ch004a")
+            #     .get_state()
+            # )
 
             # Trigger
             # result = (

@@ -11,6 +11,11 @@ from ..functionids import FunctionIDs
 from .abstractchannel import AbstractChannel
 from .blindsensorchannel import BlindSensorChannel  # noqa: F401
 from .brightnesssensorchannel import BrightnessSensorChannel  # noqa: F401
+
+# fmt: off
+from .desdoorringingsensorchannel import DesDoorRingingSensorChannel  # noqa: F401
+
+# fmt: on
 from .floor import Floor
 from .forceonoffsensorchannel import ForceOnOffSensorChannel  # noqa: F401
 from .movementdetectorchannel import MovementDetectorChannel  # noqa: F401
