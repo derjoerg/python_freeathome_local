@@ -57,6 +57,10 @@ class FreeAtHome:
         """
         return self._client is not None and not self._client.closed
 
+    def get_sys_ap(self) -> SysAp | None:
+        """Return the SysAp."""
+        return self._sys_ap
+
     async def connect(self) -> None:
         """Connect to the WebSocket of a SysAp.
 

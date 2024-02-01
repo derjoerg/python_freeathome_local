@@ -195,6 +195,18 @@ class SysAp:
         """Return Id of SysAp."""
         return self.__identifier
 
+    def get_name(self) -> str:
+        """Return name of SysAp."""
+        return self.__name
+
+    def get_version(self) -> str:
+        """Return version of SysAp."""
+        return self.__version
+
+    def get_devices(self) -> dict[str, AbstractDevice]:
+        """Return all devices."""
+        return self.__devices
+
     def get_floorplan(self) -> Floorplan:
         """Return Floorplan."""
         return self.__floorplan
